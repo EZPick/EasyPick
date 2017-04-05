@@ -6,7 +6,11 @@ Right now these services merely collect useful and relevant data. This is import
 
 ## Roles : 
 George : Project Manager, Marketing, Engineer
+
 Yvonne : Marketing, Design, Engineer
+
 Jooneil : Engineer
+
 Zeb : Support, Engineer
+
 Derek : Design, Engineer
