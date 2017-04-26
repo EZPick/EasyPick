@@ -3,7 +3,7 @@ var express = require('express'),
   db = require('../models');
 
 module.exports = function (app) {
-  app.use('/meeting/', router);
+  app.use('/api/meeting/', router);
 };
 
 router.get('/:id', function (req, res, next) {
