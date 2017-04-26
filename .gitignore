@@ -1,1 +1,3 @@
 **/node_modules
+src/client/build
+src/client/coverage

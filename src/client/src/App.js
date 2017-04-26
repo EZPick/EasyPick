@@ -1,0 +1,34 @@
+import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  //Link
+} from 'react-router-dom';
+import Home from './Home';
+import Create from './Create';
+import Respond from './Respond';
+import Meeting from './Meeting';
+import './App.css';
+
+class App extends Component {
+  componentDidMount() {
+    fetch('/api/meeting/1')
+      .then(res => res.json())
+      .then(meeting => this.setState({ meeting }));
+  }
+
+  render() {
+    return (
+      <Router className="App">
+        <div>
+          <Route exact path="/" component={Home}/>
+          <Route exact path="/create" component={Create}/>
+          <Route path="/respond/:id" component={Respond}/>
+          <Route path="/meeting/:id" component={Meeting}/>
+        </div>
+      </Router>
+    );
+  }
+}
+
+export default App;
