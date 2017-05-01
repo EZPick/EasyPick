@@ -4,10 +4,10 @@ import {
   Route,
   //Link
 } from 'react-router-dom';
-import Home from './Home';
-import Create from './Create';
-import Respond from './Respond';
-import Meeting from './Meeting';
+import Home from '../Home/Home';
+import Create from '../Create/Create';
+import Respond from '../Respond/Respond';
+import Meeting from '../Meeting/Meeting';
 import './App.css';
 
 class App extends Component {
