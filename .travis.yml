@@ -7,4 +7,4 @@ before_script:
   - npm install
   - npm install --prefix server
   - npm install --prefix client
-script: npm run --prefix ci
+script: npm run ci
