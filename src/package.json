@@ -5,8 +5,7 @@
   "scripts": {
     "client:coverage": "npm run --prefix client test -- --coverage",
     "server:coverage": "npm run --prefix server test:coverage && npm run --prefix server test:lcov",
-    "combine-coverage": "npm run client:coverage && npm run server:coverage && lcov-result-merger '{client,server}/coverage/lcov.info'",
-    "ci": "npm run combine-coverage"
+    "ci": "npm run client:coverage && npm run server:coverage && { cat client/coverage/lcov.info; cat server/coverage/lcov.info; } | ./node_modules/coveralls/bin/coveralls.js -v"
   },
   "devDependencies": {
     "coveralls": "^2.13.1",
