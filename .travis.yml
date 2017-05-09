@@ -3,7 +3,8 @@ node_js:
   - "iojs"
   - "7"
 before_script:
+  - cd src
   - npm install
-  - npm install --prefix src/server
-  - npm install --prefix src/client
-script: npm run --prefix src ci
+  - npm install --prefix server
+  - npm install --prefix client
+script: npm run --prefix ci
