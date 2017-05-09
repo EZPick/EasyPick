@@ -4,6 +4,6 @@ node_js:
   - "7"
 before_script:
   - npm install
-  - npm install --prefix server
-  - npm install --prefix client
-script: npm run ci
+  - npm install --prefix src/server
+  - npm install --prefix src/client
+script: npm run --prefix src ci
