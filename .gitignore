@@ -3,3 +3,4 @@ src/client/build
 **/coverage
 **/npm-debug.log
 **/.nyc_output
+src/server/config/config.js

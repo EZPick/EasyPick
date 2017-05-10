@@ -10,8 +10,8 @@ var config = {
     },
     port: process.env.PORT || 3001,
     username: 'root',
-    password: '',
-    db: 'mysql://root@localhost/easypick-development'
+    password: '123456',
+    db: 'mysql://root:123456@localhost/easypick-development'
   },
 
   test: {
@@ -21,8 +21,8 @@ var config = {
     },
     port: process.env.PORT || 3001,
     username: 'root',
-    password: '',
-    db: 'mysql://root@localhost/easypick-test'
+    password: '123456',
+    db: 'mysql://root:123456@localhost/easypick-test'
   },
 
   production: {
@@ -32,8 +32,8 @@ var config = {
     },
     port: process.env.PORT || 3001,
     username: 'root',
-    password: '',
-    db: 'mysql://root@localhost/easypick-production'
+    password: '123456',
+    db: 'mysql://root:123456@localhost/easypick-production'
   }
 };
 
