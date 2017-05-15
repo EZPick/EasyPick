@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-	"ci-config": "mv /src/server/config/config-ci.js /src/server/config/config.js",
+	"ci-config": "mv /server/config/config-ci.js /server/config/config.js",
     "client:coverage": "npm run --prefix client test -- --coverage",
     "server:coverage": "npm run --prefix server test:coverage && npm run --prefix server test:lcov",
     "combine-coverage": "{ cat client/coverage/lcov.info; cat server/coverage/lcov.info; }",
