@@ -9,8 +9,6 @@ var config = {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    username: 'root',
-    password: '123456',
     db: 'mysql://root:123456@localhost/easypick-development'
   },
 
@@ -20,8 +18,6 @@ var config = {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    username: 'root',
-    password: '123456',
     db: 'mysql://root:123456@localhost/easypick-test'
   },
 
@@ -31,8 +27,6 @@ var config = {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    username: 'root',
-    password: '123456',
     db: 'mysql://root:123456@localhost/easypick-production'
   }
 };
