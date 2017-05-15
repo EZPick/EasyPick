@@ -1,7 +1,9 @@
 language: node_js
 cache:
   directories:
-  - node_modules
+  - src/node_modules
+  - src/server/node_modules
+  - src/client/node_modules
 node_js:
   - "7"
 before_script:
