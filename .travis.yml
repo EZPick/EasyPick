@@ -6,4 +6,5 @@ before_script:
   - npm install
   - npm install --prefix server
   - npm install --prefix client
+  - mv server/config/config-ci.js server/config/config.js
 script: npm run ci
