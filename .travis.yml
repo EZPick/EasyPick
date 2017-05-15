@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "7"
+before_script:
+  - cd src
+  - npm install
+  - npm install --prefix server
+  - npm install --prefix client
+script: npm run ci
