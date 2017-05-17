@@ -3,31 +3,13 @@ var path = require('path'),
     env = process.env.NODE_ENV || 'development';
 
 var config = {
-  development: {
-    root: rootPath,
-    app: {
-      name: 'easypick'
-    },
-    port: process.env.PORT || 3001,
-    db: 'mysql://root@localhost/easypick-development'
-  },
-
   test: {
     root: rootPath,
     app: {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    db: 'mysql://root@localhost/easypick-test'
-  },
-
-  production: {
-    root: rootPath,
-    app: {
-      name: 'easypick'
-    },
-    port: process.env.PORT || 3001,
-    db: 'mysql://root@localhost/easypick-production'
+    db: 'postgres://postgres@localhost/easypick-test'
   }
 };
 
