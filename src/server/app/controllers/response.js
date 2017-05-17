@@ -7,8 +7,27 @@ module.exports = function (app) {
 };
 
 router.post('/create', function (req, res, next) {
-  // Accept args in the form body
-  res.json({
-    success: true
+  db.Response.create({
+    name: req.body.name,
+    email: req.body.email,
+    schedule: req.body.schedule,
+    locationPreferences: req.body.locationPreferences
+  }).then(function(result)
+  {
+    res.json({
+      success: true,
+      data: result.dataValues
+    });
+  }).catch(function(err)
+  {
+    res.json({
+      success: false,
+      error: err
+    });
   });
+
+  // Accept args in the form body
+  // res.json({
+  //   success: true
+  // });
 });
