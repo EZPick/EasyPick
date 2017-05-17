@@ -25,9 +25,4 @@ router.post('/create', function (req, res, next) {
       error: err
     });
   });
-
-  // Accept args in the form body
-  // res.json({
-  //   success: true
-  // });
 });
