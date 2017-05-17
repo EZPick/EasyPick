@@ -6,7 +6,27 @@ class Respond extends Component {
     return (
       <div>
         <h1>Respond</h1>
-        <div>This is a test.</div>
+        <form id="response-form" method="post" action="/api/response/create">
+            <div>
+                <label>Name</label>
+                <input name="name" type="text" />
+            </div>
+            <div>
+                <label>Email</label>
+                <input name="email" type="text" />
+            </div>
+            <div>
+                <label>Location Preferences</label>
+                <input name="locationPreferences" type="text" />
+            </div>
+            <div>
+                <label>Schedule</label>
+                <input name="schedule" type="text" />
+            </div>
+            <div>
+                <input type="submit" value="Submit" />
+            </div>
+        </form>
       </div>
     );
   }
