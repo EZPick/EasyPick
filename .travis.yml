@@ -1,4 +1,6 @@
 language: node_js
+services:
+  - postgresql
 node_js:
   - "7"
 before_script:
@@ -7,4 +9,5 @@ before_script:
   - npm install --prefix server
   - npm install --prefix client
   - mv server/config/config-ci.js server/config/config.js
+  - psql -c 'create database "easypick-development";' -U postgres
 script: npm run ci
