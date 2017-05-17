@@ -6,6 +6,10 @@ var express = require('express'),
 
 var app = express();
 
+app.get("/build", function(req, res){
+	res.json({status: "success"});
+});
+
 module.exports = require('./config/express')(app, config);
 
 db.sequelize

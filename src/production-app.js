@@ -1,13 +1,9 @@
+process.env.NODE_ENV = 'production';
+
 var express = require('express'),
   config = require('./server/config/config.js'),
-  db = require('./server/app/models');
-
-// Sub-App
-var sub = express();
-
-sub.get("/build", function(req, res){
-	res.json({status: "success"});
-});
+  db = require('./server/app/models'),
+  sub = require('./server/app.js');
 
 // Main App
 
@@ -18,7 +14,7 @@ app.use("/api", sub);
 app.use(express.static('client/build'));
 
 app.get("*", function(req, res) {
-	res.sendFile(path.join(__dirname + '/client/build/index.html'));
+	res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
 db.sequelize
