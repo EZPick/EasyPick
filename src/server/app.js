@@ -1,14 +1,8 @@
-
-
 var express = require('express'),
   config = require('./config/config'),
   db = require('./app/models');
 
 var app = express();
-
-app.get("/build", function(req, res){
-	res.json({status: "success"});
-});
 
 module.exports = require('./config/express')(app, config);
 

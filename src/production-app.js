@@ -4,6 +4,7 @@ var express = require('express'),
   config = require('./server/config/config.js'),
   db = require('./server/app/models'),
   sub = require('./server/app.js');
+  path = require('path');
 
 // Main App
 
@@ -14,7 +15,7 @@ app.use("/api", sub);
 app.use(express.static('client/build'));
 
 app.get("*", function(req, res) {
-	res.sendFile(path.join(__dirname, 'client/build/index.html'));
+  res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
 db.sequelize
