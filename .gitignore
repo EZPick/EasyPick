@@ -1,4 +1,6 @@
 **/node_modules
 src/client/build
-src/client/coverage
+**/coverage
 **/npm-debug.log
+**/.nyc_output
+src/server/config/config.js

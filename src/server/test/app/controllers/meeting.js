@@ -2,10 +2,9 @@
 
 var expect = require('chai').expect;
 
+var meeting = require('../../../app/controllers/meeting');
 
-var meeting = require('../../../app/models/meeting');
-
-describe('meeting', function() {
+describe('meeting routes', function() {
   it('should load', function() {
     expect(meeting).to.be.a('function');
   });
