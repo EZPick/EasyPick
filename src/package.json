@@ -1,0 +1,15 @@
+{
+  "name": "easypick",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "client:coverage": "npm run --prefix client test -- --coverage",
+    "server:coverage": "npm run --prefix server test:coverage && npm run --prefix server test:lcov",
+    "combine-coverage": "{ cat client/coverage/lcov.info; cat server/coverage/lcov.info; }",
+    "ci": "npm run client:coverage && npm run server:coverage && npm run combine-coverage | coveralls"
+  },
+  "devDependencies": {
+    "coveralls": "^2.13.1",
+    "lcov-result-merger": "^1.2.0"
+  }
+}

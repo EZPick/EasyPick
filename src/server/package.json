@@ -7,6 +7,7 @@
     "start": "node app.js",
     "test": "NODE_ENV=test mocha --recursive test",
     "test:coverage": "nyc npm test",
+    "test:lcov": "nyc report --reporter=lcov",
     "test:unit": "mocha --recursive test/middleware test/models test/routes",
     "test:integration": "mocha --recursive test/integration"
   },
@@ -19,7 +20,8 @@
     "glob": "^6.0.4",
     "method-override": "^2.3.8",
     "morgan": "^1.8.1",
-    "mysql": "^2.13.0",
+    "pg": "^6.2.2",
+    "pg-hstore": "^2.3.2",
     "sequelize": "^3.30.4",
     "serve-favicon": "^2.4.2"
   },
