@@ -1,10 +1,9 @@
 var express = require('express'),
   router = express.Router(),
-  db = require('../models'),
-  config = require('../../config/config');
+  db = require('../models');
 
 module.exports = function (app) {
-  if (config.env == 'development') {
+  if (process.env.NODE_ENV == 'development') {
     app.use('/api/meeting', router);
   } else {
     app.use('/meeting', router);
