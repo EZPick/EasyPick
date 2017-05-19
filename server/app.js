@@ -6,6 +6,13 @@ var app = express();
 
 module.exports = require('./config/express')(app, config);
 
+if (!module.parent) {
+  // When we're actually running the server, namespace everything within /api
+  var subapp = app;
+  app = express();
+  app.use('/api', subapp);
+}
+
 db.sequelize
   .sync()
   .then(function () {
@@ -17,4 +24,3 @@ db.sequelize
   }).catch(function (e) {
     throw new Error(e);
   });
-

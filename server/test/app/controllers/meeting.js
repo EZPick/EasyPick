@@ -14,39 +14,7 @@ describe('meeting controller', function() {
     expect(meeting).to.be.a('function');
   });
 
-  describe('dev routes', function() {
-    var app;
-
-    beforeEach(function() {
-      app = express();
-      process.env.NODE_ENV = 'development';
-      meeting(app);
-    });
-
-    it('should respond to /api/meeting/create', function(done) {
-      chai.request(app)
-        .post('/api/meeting/create')
-        // Pass parameters here
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          expect(res).to.have.status(200);
-          done();
-        });
-    });
-
-    it('should respond to /api/meeting/1', function(done) {
-      chai.request(app)
-        .get('/api/meeting/1')
-        // Pass parameters here
-        .end(function(err, res) {
-          expect(err).to.not.exist;
-          expect(res).to.have.status(200);
-          done();
-        });
-    });
-  });
-
-  describe('production routes', function() {
+  describe('routes', function() {
     var app;
 
     beforeEach(function() {

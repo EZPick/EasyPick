@@ -3,11 +3,7 @@ var express = require('express'),
   db = require('../models');
 
 module.exports = function (app) {
-  if (process.env.NODE_ENV == 'development') {
-    app.use('/api/meeting', router);
-  } else {
-    app.use('/meeting', router);
-  }
+  app.use('/meeting', router);
 };
 
 router.post('/create', function(req, res, next) {
