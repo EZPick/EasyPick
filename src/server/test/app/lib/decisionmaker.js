@@ -915,4 +915,103 @@ describe('decisionMaker', function() {
         });
     });
   });
+
+  describe('sendEmailTo', function() {
+    it('should send emails to the addresses supplied', function() {
+      var responses = [
+        {
+          email: 'fakeemail1'
+        },
+        {
+          email: 'fakeemail2'
+        },
+        {
+          email: 'fakeemail3'
+        }
+      ];
+      var time = {
+        day: 4,
+        minutesIn: 450,
+        canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
+        cantMake: []
+      };
+      decisionMaker.sendEmailTo(responses, time, fakeBiz);
+
+      expect(sendMailSpy.calledOnce).to.equal(true);
+
+      expect(sendMailSpy.calledWith(
+        sinon.match({
+          to: 'fakeemail1, fakeemail2, fakeemail3'
+        })
+      )).to.equal(true);
+    });
+
+    it('should send an email containing the time', function() {
+      var responses = [
+        {
+          email: 'fakeemail1'
+        },
+        {
+          email: 'fakeemail2'
+        },
+        {
+          email: 'fakeemail3'
+        }
+      ];
+      var time = {
+        day: 4,
+        minutesIn: 450,
+        canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
+        cantMake: []
+      };
+      decisionMaker.sendEmailTo(responses, time, fakeBiz);
+
+      expect(sendMailSpy.calledOnce).to.equal(true);
+
+      var timeString = '7:30am';
+      var dayString = 'Thursday';
+
+      expect(sendMailSpy.calledWith(
+        sinon.match({
+          text: sinon.match(function(text) {
+            return text.indexOf(timeString) !== -1 && text.indexOf(dayString) !== -1;
+          })
+        })
+      )).to.equal(true);
+    });
+
+    it('should send an email containing the place name and address', function() {
+      var responses = [
+        {
+          email: 'fakeemail1'
+        },
+        {
+          email: 'fakeemail2'
+        },
+        {
+          email: 'fakeemail3'
+        }
+      ];
+      var time = {
+        day: 4,
+        minutesIn: 450,
+        canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
+        cantMake: []
+      };
+      decisionMaker.sendEmailTo(responses, time, fakeBiz);
+
+      expect(sendMailSpy.calledOnce).to.equal(true);
+
+      var placeName = fakeBiz.name;
+      var placeAddress = fakeBiz.location.formatted_address;
+
+      expect(sendMailSpy.calledWith(
+        sinon.match({
+          text: sinon.match(function(text) {
+            return text.indexOf(placeName) !== -1 && text.indexOf(placeAddress) !== -1;
+          })
+        })
+      )).to.equal(true);
+    });
+  });
 });

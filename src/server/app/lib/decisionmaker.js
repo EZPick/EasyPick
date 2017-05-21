@@ -243,15 +243,18 @@ module.exports = {
       .hour(Math.floor(time.minutesIn / 60))
       .minutes(time.minutesIn % 60);
 
+    var cantMake = time.cantMake.map(function(x) { return x.name; }).join(', ');
+
     var mailOptions = {
       to: responses.map(function(x) { return x.email; }).join(', '),
       subject: 'Your Meeting Has Been Scheduled',
-      text: `Your meeting has been scheduled for ${time.format('h:mm on dddd')}.
-        It's at ${place.name} (${place.location.formatted_address}).`, // plain text body
+      text: `Your meeting has been scheduled for ${momentTime.format('h:mma on dddd')}.
+        It's at ${place.name} (${place.location.formatted_address}).
+        ${cantMake.length > 0 ? cantMake + " can't make it" : ''}`, // plain text body
       //html: '<b>Hello world ?</b>' // html body
     };
 
-    transporter.sendMail(mailOptions, function(error, info) {
+    return transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
         return console.log(error);
       }
