@@ -1,8 +1,8 @@
-
-
 var express = require('express'),
   config = require('./config/config'),
   db = require('./app/models');
+
+require('dotenv').config();
 
 var app = express();
 
@@ -19,4 +19,3 @@ db.sequelize
   }).catch(function (e) {
     throw new Error(e);
   });
-
