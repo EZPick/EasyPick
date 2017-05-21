@@ -2,8 +2,7 @@ module.exports = function (sequelize, DataTypes) {
 
   var Meeting = sequelize.define('Meeting', {
     title: { type: DataTypes.STRING, allowNull: false },
-    closeoutDate: { type: DataTypes.DATE, allowNull: false},
-    closeoutTime: { type: DataTypes.TIME, allowNull: false},
+    closeoutTime: { type: DataTypes.DATE, allowNull: false},
     generalLocation: { type: DataTypes.STRING, defaultValue: "", allowNull: false }, //  general location
     latitude: { type: DataTypes.INTEGER, defaultValue: null, validate: { min: -90, max: 90 }}, // Location latitude
     longitude: { type: DataTypes.INTEGER, defaultValue: null, validate: { min: -180, max: 180 }}, // Location longitude
