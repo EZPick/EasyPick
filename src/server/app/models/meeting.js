@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
     creator: { type: DataTypes.STRING, defaultValue: "", allowNull: false } // Default value is one hour -- units in minutes
   }, {
     classMethods: {
-        associate: function (models) {
+      associate: function (models) {
         Meeting.hasOne(models.Decision);
         Meeting.hasMany(models.Response);
       }
