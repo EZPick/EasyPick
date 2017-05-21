@@ -17,7 +17,7 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-function calculateBufferAround(slot, day) {
+function calculateBufferAround(slot, day, durationFloored) {
   var bufferBeforeSlot = slot;
 
   while (bufferBeforeSlot > 0) {
@@ -27,7 +27,8 @@ function calculateBufferAround(slot, day) {
     }
   }
 
-  var bufferAfterSlot = slot;
+  var endOfMeeting = slot + durationFloored;
+  var bufferAfterSlot = endOfMeeting;
 
   while (bufferAfterSlot < 1440) {
     bufferAfterSlot += 30;
@@ -38,24 +39,37 @@ function calculateBufferAround(slot, day) {
 
   // These are the *starts* of half-hour segments
   var bufferBefore = slot - bufferBeforeSlot - 30;
-  var bufferAfter = bufferAfterSlot - slot - 30;
+  var bufferAfter = bufferAfterSlot - endOfMeeting - 30;
 
   return Math.min(bufferBefore, bufferAfter);
 }
 
-function determineTime(responses) {
+function determineTime(responses, meeting) {
   var scheduleTally = [];
+  var durationFloored = Math.floor((meeting.duration - 1) / 30) * 30;
   responses.forEach(function(response) {
     response.schedule.forEach(function(day, dayIndex) {
       for (var slot in day) {
-        if (day.hasOwnProperty(slot) && day[slot] === true) {
+
+        slot = parseInt(slot, 10);
+        var isFreeForDuration = true;
+        for (var i = slot; i <= slot + durationFloored; i += 30) {
+          if (!day[i]) {
+            isFreeForDuration = false;
+            break;
+          }
+        }
+
+        if (day.hasOwnProperty(slot) && day[slot] === true && isFreeForDuration) {
           // This person is available
-          slot = parseInt(slot, 10);
+
+          // Set up the day and slot, if they haven't been already
           scheduleTally[dayIndex] = scheduleTally[dayIndex] || {};
           scheduleTally[dayIndex][slot] = scheduleTally[dayIndex][slot] || [];
+
           scheduleTally[dayIndex][slot].push({
             email: response.email,
-            buffer: calculateBufferAround(slot, day)
+            buffer: calculateBufferAround(slot, day, durationFloored)
           });
         }
       }
@@ -79,7 +93,6 @@ function determineTime(responses) {
         if (day[slot].length > highestOverlap) {
           // We just found a new leader
           highAttendanceTimes = [thisTime];
-          highestOverlap = day[slot].length;
         } else {
           // We found a tie
           highAttendanceTimes.push(thisTime);
@@ -216,7 +229,7 @@ module.exports = {
   makeDecision: function(meeting) {
     return meeting.getResponses()
       .then(function(responses) {
-        var time = determineTime(responses);
+        var time = determineTime(responses, meeting);
         return Promise.all([
           Promise.resolve(responses),
           Promise.resolve(time),
