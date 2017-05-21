@@ -4,9 +4,8 @@ import './Location.css';
 class Location extends Component {
   render() {
     return (
-      <div>
-        <h1>Location</h1>
-        <div>This is a test.</div>
+      <div className="locationSubView">
+        <h2>Location Sub View</h2>
       </div>
     );
   }
