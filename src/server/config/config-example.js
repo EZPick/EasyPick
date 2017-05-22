@@ -9,7 +9,7 @@ var config = {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    db: 'mysql://root:123456@localhost/easypick-development'
+    db: 'postgres://root:123456@localhost/easypick-development'
   },
 
   test: {
@@ -18,7 +18,7 @@ var config = {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    db: 'mysql://root:123456@localhost/easypick-test'
+    db: 'postgres://root:123456@localhost/easypick-test'
   },
 
   production: {
@@ -27,7 +27,7 @@ var config = {
       name: 'easypick'
     },
     port: process.env.PORT || 3001,
-    db: 'mysql://root:123456@localhost/easypick-production'
+    db: 'postgres://root:123456@localhost/easypick-production'
   }
 };
 
