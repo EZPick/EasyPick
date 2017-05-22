@@ -46,6 +46,9 @@ function calculateBufferAround(slot, day, durationFloored) {
 
 function determineTime(responses, meeting) {
   var scheduleTally = [];
+  // NOTE: When a meeting is 90 minutes long, for instance, we want to schedule
+  // it into a 90-minute slot, even though technically that would give the person
+  // 0 minutes to get to their next thing
   var durationFloored = Math.floor((meeting.duration - 1) / 30) * 30;
   responses.forEach(function(response) {
     response.schedule.forEach(function(day, dayIndex) {
