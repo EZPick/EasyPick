@@ -1,10 +1,10 @@
 module.exports = function (sequelize, DataTypes) {
 
   var Response = sequelize.define('Response', {
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    schedule: DataTypes.TEXT, // Stored as JSON?
-    locationPreferences: DataTypes.TEXT // Stored as JSON?
+    name: { type: DataTypes.STRING, allowNull: false }, // Responder Name
+    email: { type: DataTypes.STRING, allowNull: false, }, // Responder Email
+    schedule: { type: DataTypes.JSON, allowNull: false },
+    locationPreferences: { type: DataTypes.JSON, allowNull: false }
   }, {
     classMethods: {
       associate: function (models) {
