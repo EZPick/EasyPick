@@ -1,4 +1,5 @@
 var moment = require('moment');
+var db = require('../models');
 
 var yelp = require('graphql-client')({
   url: 'https://api.yelp.com/v3/graphql',
@@ -194,7 +195,7 @@ function determinePlace(responses, time, meeting) {
       search(term: $category,
              radius: $radius,
              # open_at: $openAt doesn't currently work
-      			 location: $generalLocation) {
+             location: $generalLocation) {
         business {
           name
           location {
@@ -220,13 +221,8 @@ function determinePlace(responses, time, meeting) {
 module.exports = {
   makeDecisionAndSendEmails: function(meeting) {
     makeDecision(meeting)
-      .then(function(values) {
-        var responses = values[0];
-        var time = values[1];
-        var place = values[2];
-        responses.forEach(function(response) {
-          module.exports.sendEmailTo(response, time, place);
-        });
+      .then(function([meeting, responses, decision]) {
+        module.exports.sendEmailTo(responses, decision);
       });
   },
   makeDecision: function(meeting) {
@@ -237,6 +233,37 @@ module.exports = {
           Promise.resolve(responses),
           Promise.resolve(time),
           determinePlace(responses, time, meeting)
+        ]);
+      })
+      .then(function([responses, time, place]) {
+        var canMake = [];
+        var cantMake = [];
+        time.canMake.forEach(function(email) {
+          var resp = responses.filter(x => x.email === email)[0];
+          canMake.push(resp.id);
+        });
+        time.cantMake.forEach(function(email) {
+          var resp = responses.filter(x => x.email === email)[0];
+          cantMake.push(resp.id);
+        });
+        
+        return Promise.all([
+          Promise.resolve(responses),
+          db.Decision.create({
+            address: place.location.formatted_address,
+            nameOfLocation: place.name,
+            dayOfWeek: time.day,
+            minutesIn: time.minutesIn,
+            canMake: canMake,
+            cantMake: cantMake,
+          })
+        ]);
+      })
+      .then(function([responses, decision]) {
+        return Promise.all([
+          meeting.setDecision(decision),
+          Promise.resolve(responses),
+          Promise.resolve(decision)
         ]);
       });
   },

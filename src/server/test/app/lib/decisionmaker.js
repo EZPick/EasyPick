@@ -14,6 +14,7 @@ var fakeBiz = {
 
 var graphQlMock = {query: null};
 var mailTransportMock = {sendMail: null};
+var DecisionMock = {create: null};
 
 mockery.registerMock('graphql-client', function() {
   return graphQlMock;
@@ -23,6 +24,10 @@ mockery.registerMock('nodemailer', {
   createTransport: function() {
     return mailTransportMock;
   }
+});
+
+mockery.registerMock('../models', {
+  Decision: DecisionMock
 });
 
 mockery.enable({
@@ -36,6 +41,7 @@ mockery.disable();
 describe('decisionMaker', function() {
   var queryStub;
   var sendMailSpy;
+  var decisionCreateSpy;
   beforeEach(function() {
     queryStub = sinon.stub().returns(
       Promise.resolve({
@@ -52,6 +58,13 @@ describe('decisionMaker', function() {
     sendMailSpy = sinon.spy();
 
     mailTransportMock.sendMail = sendMailSpy;
+    
+    decisionCreateSpy = sinon.spy(function(opts) {
+      opts.id = 1;
+      return Promise.resolve(opts);
+    });
+    
+    DecisionMock.create = decisionCreateSpy;
   });
 
   it('should load', function() {
@@ -67,6 +80,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             // Sunday
@@ -77,6 +91,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -87,6 +102,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             // Sunday
@@ -104,9 +120,11 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
+        .then(function([_, responses, decision]) {
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
             sinon.match.string,
@@ -121,18 +139,17 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
+          
+          expect(decision.dayOfWeek).to.equal(0);
+          expect(decision.minutesIn).to.equal(450);
+          expect(decision.cantMake).to.deep.equal([]);
+          expect(decision.canMake).to.deep.equal([1, 2, 3]);
 
-
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 0,
-            minutesIn: 450,
-            canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-            cantMake: []
-          });
-
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
         });
     });
 
@@ -142,6 +159,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             {},
@@ -157,6 +175,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -181,6 +200,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             {},
@@ -211,19 +231,18 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 2,
-            minutesIn: 480,
-            canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-            cantMake: []
-          });
-
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+        .then(function([_, responses, decision]) {
+          expect(decision.dayOfWeek).to.equal(2);
+          expect(decision.minutesIn).to.equal(480);
+          expect(decision.canMake).to.deep.equal([1, 2, 3]);
+          expect(decision.cantMake).to.deep.equal([]);
+          
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
@@ -239,6 +258,9 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -248,6 +270,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             {},
@@ -263,6 +286,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -287,6 +311,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             {},
@@ -317,6 +342,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -331,17 +358,14 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 2,
-            minutesIn: 480,
-            canMake: ['fakeemail1', 'fakeemail3'],
-            cantMake: ['fakeemail2']
-          });
-
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+        .then(function([_, responses, decision]) {
+          expect(decision.dayOfWeek).to.equal(2);
+          expect(decision.minutesIn).to.equal(480);
+          expect(decision.canMake).to.deep.equal([1, 3]);
+          expect(decision.cantMake).to.deep.equal([2]);
+          
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
@@ -357,6 +381,9 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -366,6 +393,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             {},
@@ -390,6 +418,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -421,6 +450,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             {},
@@ -458,6 +488,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -472,17 +504,14 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 4,
-            minutesIn: 960,
-            canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-            cantMake: []
-          });
-
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+        .then(function([_, responses, decision]) {
+          expect(decision.dayOfWeek).to.equal(4);
+          expect(decision.minutesIn).to.equal(960);
+          expect(decision.canMake).to.deep.equal([1, 2, 3]);
+          expect(decision.cantMake).to.deep.equal([]);
+          
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
@@ -498,6 +527,9 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -507,6 +539,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             {},
@@ -525,6 +558,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -556,6 +590,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             {},
@@ -592,6 +627,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -606,17 +643,14 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 4,
-            minutesIn: 960,
-            canMake: ['fakeemail2', 'fakeemail3'],
-            cantMake: ['fakeemail1']
-          });
-
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+        .then(function([_, responses, decision]) {
+          expect(decision.dayOfWeek).to.equal(4);
+          expect(decision.minutesIn).to.equal(960);
+          expect(decision.canMake).to.deep.equal([2, 3]);
+          expect(decision.cantMake).to.deep.equal([1]);
+          
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
@@ -632,6 +666,9 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -641,6 +678,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             {},
@@ -663,6 +701,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -689,6 +728,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             {},
@@ -724,6 +764,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -738,18 +780,14 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
-          debugger;
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 4,
-            minutesIn: 300,
-            canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-            cantMake: []
-          });
+        .then(function([_, responses, decision]) {
+          expect(decision.dayOfWeek).to.equal(4);
+          expect(decision.minutesIn).to.equal(300);
+          expect(decision.canMake).to.deep.equal([1, 2, 3]);
+          expect(decision.cantMake).to.deep.equal([]);
 
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
@@ -765,6 +803,9 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -774,6 +815,7 @@ describe('decisionMaker', function() {
       var responses = [
         // Person 1
         {
+          id: 1,
           email: 'fakeemail1',
           schedule: [
             {},
@@ -804,6 +846,7 @@ describe('decisionMaker', function() {
         },
         // Person 2
         {
+          id: 2,
           email: 'fakeemail2',
           schedule: [
             // Sunday
@@ -835,6 +878,7 @@ describe('decisionMaker', function() {
         },
         // Person 3
         {
+          id: 3,
           email: 'fakeemail3',
           schedule: [
             {},
@@ -872,6 +916,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
+      
+      meeting.setDecision = sinon.spy();
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -886,17 +932,14 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function(values) {
-          var time = values[1];
-          expect(time).to.deep.equal({
-            day: 4,
-            minutesIn: 930,
-            canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-            cantMake: []
-          });
-
-          var place = values[2];
-          expect(place).to.equal(fakeBiz);
+        .then(function([_, responses, decision]) {
+          expect(decision.dayOfWeek).to.equal(4);
+          expect(decision.minutesIn).to.equal(930);
+          expect(decision.canMake).to.deep.equal([1, 2, 3]);
+          expect(decision.cantMake).to.deep.equal([]);
+          
+          expect(decision.nameOfLocation).to.equal(fakeBiz.name);
+          expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
           expect(queryStub.calledWith(
@@ -912,6 +955,9 @@ describe('decisionMaker', function() {
                 .unix()
             })
           )).to.equal(true);
+          
+          expect(decisionCreateSpy.calledOnce).to.equal(true);
+          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
   });
