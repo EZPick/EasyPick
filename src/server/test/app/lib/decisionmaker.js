@@ -16,7 +16,7 @@ var graphQlMock = {query: null};
 var mailTransportMock = {sendMail: null};
 var DecisionMock = {create: null};
 
-mockery.registerMock('graphql-client', function() {
+mockery.registerMock('./graphql-client.js', function() {
   return graphQlMock;
 });
 
@@ -115,34 +115,21 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 30;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
+      meeting.id = 1;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
-      meeting.setDecision = sinon.spy();
 
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(0)
-                .hours(7)
-                .minutes(30)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
-          
+
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(0);
           expect(decision.minutesIn).to.equal(450);
           expect(decision.cantMake).to.deep.equal([]);
@@ -226,16 +213,18 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 30;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
       
-      meeting.setDecision = sinon.spy();
-
+      meeting.id = 1;
+      
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(2);
           expect(decision.minutesIn).to.equal(480);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
@@ -245,22 +234,8 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(2)
-                .hours(8)
-                .minutes(0)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -337,13 +312,14 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 30;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
       
-      meeting.setDecision = sinon.spy();
+      meeting.id = 1;
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -358,7 +334,8 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(2);
           expect(decision.minutesIn).to.equal(480);
           expect(decision.canMake).to.deep.equal([1, 3]);
@@ -368,22 +345,8 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(2)
-                .hours(8)
-                .minutes(0)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -483,13 +446,14 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 30;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
       
-      meeting.setDecision = sinon.spy();
+      meeting.id = 1;
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -504,7 +468,8 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(4);
           expect(decision.minutesIn).to.equal(960);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
@@ -514,22 +479,8 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(4)
-                .hours(16)
-                .minutes(0)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -622,13 +573,14 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 30;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
       
-      meeting.setDecision = sinon.spy();
+      meeting.id = 1;
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -643,7 +595,8 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(4);
           expect(decision.minutesIn).to.equal(960);
           expect(decision.canMake).to.deep.equal([2, 3]);
@@ -653,22 +606,8 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(4)
-                .hours(16)
-                .minutes(0)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -759,13 +698,14 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 60;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
       
-      meeting.setDecision = sinon.spy();
+      meeting.id = 1;
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -780,7 +720,8 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(4);
           expect(decision.minutesIn).to.equal(300);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
@@ -790,22 +731,8 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(4)
-                .hours(5)
-                .minutes(0)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
 
@@ -911,13 +838,14 @@ describe('decisionMaker', function() {
 
       meeting.radius = 2000;
       meeting.duration = 90;
-      meeting.generalLocation = 'over there';
+      meeting.generalLocationLongitude = -100.0;
+      meeting.generalLocationLatitude = 43.0;
 
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
       
-      meeting.setDecision = sinon.spy();
+      meeting.id = 1;
 
       var queryStub = sinon.stub().returns(
         Promise.resolve({
@@ -932,7 +860,8 @@ describe('decisionMaker', function() {
       graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
-        .then(function([_, responses, decision]) {
+        .then(function([responses, decision]) {
+          expect(decision.MeetingId).to.equal(1);
           expect(decision.dayOfWeek).to.equal(4);
           expect(decision.minutesIn).to.equal(930);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
@@ -942,22 +871,8 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          expect(queryStub.calledWith(
-            sinon.match.string,
-            sinon.match({
-              category: 'coffee shop',
-              radius: 2000,
-              generalLocation: 'over there',
-              openAt: moment()
-                .day(4)
-                .hours(15)
-                .minutes(30)
-                .unix()
-            })
-          )).to.equal(true);
           
           expect(decisionCreateSpy.calledOnce).to.equal(true);
-          expect(meeting.setDecision.calledOnce).to.equal(true);
         });
     });
   });

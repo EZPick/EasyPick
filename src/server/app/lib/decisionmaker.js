@@ -1,10 +1,10 @@
 var moment = require('moment');
 var db = require('../models');
 
-var yelp = require('graphql-client')({
+var yelp = require('./graphql-client.js')({
   url: 'https://api.yelp.com/v3/graphql',
   headers: {
-    Authentication: 'Bearer ' + process.env.YELP_TOKEN
+    Authorization: 'Bearer ' + process.env.YELP_TOKEN
   }
 });
 
@@ -187,15 +187,12 @@ function determinePlace(responses, time, meeting) {
     .minutes(time.minutesIn % 60);
 
   var query = `
-    query SearchForBusinesses(
-          $category: String,
-          $radius: Integer,
-          $generalLocation: String,
-          $openAt: Integer) {
-      search(term: $category,
-             radius: $radius,
-             # open_at: $openAt doesn't currently work
-             location: $generalLocation) {
+    {
+      search(term: "${category}",
+             radius: ${meeting.radius.toString()},
+             longitude: ${meeting.generalLocationLongitude.toString()},
+             latitude: ${meeting.generalLocationLatitude.toString()}
+             ) {
         business {
           name
           location {
@@ -205,14 +202,7 @@ function determinePlace(responses, time, meeting) {
       }
     }`;
 
-  var variables = {
-    category: category,
-    radius: meeting.radius,
-    generalLocation: meeting.generalLocation,
-    openAt: momentTime.unix()
-  };
-
-  return yelp.query(query, variables)
+  return yelp.query(query)
     .then(function(json) {
       return Promise.resolve(json.data.search.business[0]);
     });
@@ -221,7 +211,7 @@ function determinePlace(responses, time, meeting) {
 module.exports = {
   makeDecisionAndSendEmails: function(meeting) {
     makeDecision(meeting)
-      .then(function([meeting, responses, decision]) {
+      .then(function([responses, decision]) {
         module.exports.sendEmailTo(responses, decision);
       });
   },
@@ -256,14 +246,8 @@ module.exports = {
             minutesIn: time.minutesIn,
             canMake: canMake,
             cantMake: cantMake,
+            MeetingId: meeting.id
           })
-        ]);
-      })
-      .then(function([responses, decision]) {
-        return Promise.all([
-          meeting.setDecision(decision),
-          Promise.resolve(responses),
-          Promise.resolve(decision)
         ]);
       });
   },
