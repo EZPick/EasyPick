@@ -7,12 +7,13 @@ class Schedule extends Component {
       <div>
         <h1>Schedule</h1>
         <div>This is a test.</div>
+        <input value={this.value()} name="schedule" />
       </div>
     );
   }
 
   value() {
-    // get the value
+    return "test_schedule";
   }
 }
 
