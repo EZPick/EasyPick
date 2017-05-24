@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Respond.css';
 import Schedule from '../Schedule/Schedule';
+import Location from '../Location/Location';
 import $ from 'jquery';
 
 class Respond extends Component {
@@ -29,8 +30,7 @@ class Respond extends Component {
                             <input name="email" className="form-control" type="text" placeholder="Email" required />
                         </div>
                         <div className="form-group">
-                            <label>Location Preferences</label>
-                            <input name="locationPreferences" className="form-control" type="text" />
+                            <Location />
                         </div>
                         <div className="form-group">
                             <Schedule />
