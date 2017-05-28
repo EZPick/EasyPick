@@ -2,7 +2,6 @@
 
 var expect = require('chai').expect;
 
-
 var meeting = require('../../../app/models/meeting');
 
 describe('meeting', function() {
