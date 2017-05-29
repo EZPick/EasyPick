@@ -1,0 +1,13 @@
+<p>
+  Your meeting has been scheduled for <%= momentTime.format('h:mma on dddd') %>
+  <% if (place != null) { %>
+    at <%= place.name %> (<%= place.location.formatted_address} %>).
+  <% } else { %>
+    but no available location was found.
+  <% } %>
+</p>
+<% if (cantMake.length > 0) { %>
+  <p>
+    <%= cantMake.join(', ') %> are busy, but this was the best time found.
+  </p>
+<% } %>

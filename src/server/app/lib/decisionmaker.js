@@ -9,6 +9,7 @@ var yelp = require('./graphql-client.js')({
 });
 
 var nodemailer = require('nodemailer');
+var EmailTemplate = require('email-templates').EmailTemplate;
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -17,6 +18,14 @@ var transporter = nodemailer.createTransport({
         pass: process.env.GMAIL_PASS
     }
 });
+
+var sendDecisionEmail = transporter
+  .templateSender(
+    new EmailTemplate('../email-templates/decision'),
+    {
+      subject: 'Your Meeting Has Been Scheduled'
+    }
+  );
 
 function calculateBufferAround(slot, day, durationFloored) {
   var bufferBeforeSlot = slot;
@@ -257,22 +266,17 @@ module.exports = {
       .hour(Math.floor(time.minutesIn / 60))
       .minutes(time.minutesIn % 60);
 
-    var cantMake = time.cantMake.map(function(x) { return x.name; }).join(', ');
+    var cantMake = time.cantMake.map(function(x) { return x.name; });
 
-    var mailOptions = {
-      to: responses.map(function(x) { return x.email; }).join(', '),
-      subject: 'Your Meeting Has Been Scheduled',
-      text: `Your meeting has been scheduled for ${momentTime.format('h:mma on dddd')}.
-        It's at ${place.name} (${place.location.formatted_address}).
-        ${cantMake.length > 0 ? cantMake + " can't make it" : ''}`, // plain text body
-      //html: '<b>Hello world ?</b>' // html body
-    };
-
-    return transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        return console.log(error);
+    return sendDecisionEmail(
+      {
+        to: responses.map(function(x) { return x.email; }).join(', ')
+      },
+      {
+        momentTime: momentTime,
+        place: place,
+        cantMake: cantMake
       }
-      console.log('Email %s sent: %s', info.messageId, info.response);
-    });
+    );
   }
 };
