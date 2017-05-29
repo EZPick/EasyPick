@@ -1,7 +1,7 @@
 <p>
   Your meeting has been scheduled for <%= momentTime.format('h:mma on dddd') %>
-  <% if (place != null) { %>
-    at <%= place.name %> (<%= place.location.formatted_address} %>).
+  <% if (nameOfLocation != null) { %>
+    at <%= nameOfLocation %> (<%= address %>).
   <% } else { %>
     but no available location was found.
   <% } %>

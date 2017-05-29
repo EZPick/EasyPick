@@ -12,18 +12,21 @@ var nodemailer = require('nodemailer');
 var EmailTemplate = require('email-templates').EmailTemplate;
 
 var transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: false, // upgrade later with STARTTLS
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
     }
 });
 
 var sendDecisionEmail = transporter
   .templateSender(
-    new EmailTemplate('../email-templates/decision'),
+    new EmailTemplate('./app/email-templates/decision'),
     {
-      subject: 'Your Meeting Has Been Scheduled'
+      subject: 'Your Meeting Has Been Scheduled',
+      from: process.env.EMAILS_FROM
     }
   );
 
@@ -63,7 +66,6 @@ function determineTime(responses, meeting) {
   responses.forEach(function(response) {
     response.schedule.forEach(function(day, dayIndex) {
       for (var slot in day) {
-
         slot = parseInt(slot, 10);
         var isFreeForDuration = true;
         for (var i = slot; i <= slot + durationFloored; i += 30) {
@@ -224,7 +226,7 @@ function determinePlace(responses, time, meeting) {
 
 module.exports = {
   makeDecisionAndSendEmails: function(meeting) {
-    makeDecision(meeting)
+    module.exports.makeDecision(meeting)
       .then(function([responses, decision]) {
         module.exports.sendEmailTo(responses, decision);
       });
@@ -265,13 +267,13 @@ module.exports = {
         ]);
       });
   },
-  sendEmailTo: function(responses, time, place) {
+  sendEmailTo: function(responses, decision) {
     var momentTime = moment()
-      .day(time.day)
-      .hour(Math.floor(time.minutesIn / 60))
-      .minutes(time.minutesIn % 60);
+      .day(decision.dayOfWeek)
+      .hour(Math.floor(decision.minutesIn / 60))
+      .minutes(decision.minutesIn % 60);
 
-    var cantMake = time.cantMake.map(function(x) { return x.name; });
+    var cantMake = decision.cantMake.map(function(x) { return x.name; });
 
     return sendDecisionEmail(
       {
@@ -279,7 +281,8 @@ module.exports = {
       },
       {
         momentTime: momentTime,
-        place: place,
+        address: decision.address,
+        nameOfLocation: decision.nameOfLocation,
         cantMake: cantMake
       }
     );

@@ -827,13 +827,15 @@ describe('decisionMaker', function() {
           email: 'fakeemail3'
         }
       ];
-      var time = {
-        day: 4,
+      var decision = {
+        dayOfWeek: 4,
         minutesIn: 450,
         canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-        cantMake: []
+        cantMake: [],
+        address: fakeBiz.location.formatted_address,
+        nameOfLocation: fakeBiz.name
       };
-      decisionMaker.sendEmailTo(responses, time, fakeBiz);
+      decisionMaker.sendEmailTo(responses, decision);
 
       expect(sendMailSpy.calledOnce).to.equal(true);
 
