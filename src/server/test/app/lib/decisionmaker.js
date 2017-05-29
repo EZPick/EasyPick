@@ -12,22 +12,41 @@ var fakeBiz = {
   }
 };
 
-var graphQlMock = {query: null};
-var mailTransportMock = {sendMail: null};
-var DecisionMock = {create: null};
+var queryStub = sinon.stub().returns(
+  Promise.resolve({
+    data: {
+      search: {
+        business: [fakeBiz]
+      }
+    }
+  })
+);
+var sendMailSpy = sinon.spy();
+var decisionCreateSpy = sinon.spy(function(opts) {
+  opts.id = 1;
+  return Promise.resolve(opts);
+});
 
 mockery.registerMock('./graphql-client.js', function() {
-  return graphQlMock;
+  return {
+    query: queryStub
+  };
 });
 
 mockery.registerMock('nodemailer', {
   createTransport: function() {
-    return mailTransportMock;
+    return {
+      templateSender: function() {
+        return sendMailSpy;
+      }
+    };
   }
 });
 
 mockery.registerMock('../models', {
-  Decision: DecisionMock
+  Decision: {
+    create: decisionCreateSpy
+  }
 });
 
 mockery.enable({
@@ -39,32 +58,10 @@ var decisionMaker = require('../../../app/lib/decisionmaker');
 mockery.disable();
 
 describe('decisionMaker', function() {
-  var queryStub;
-  var sendMailSpy;
-  var decisionCreateSpy;
   beforeEach(function() {
-    queryStub = sinon.stub().returns(
-      Promise.resolve({
-        data: {
-          search: {
-            business: [fakeBiz]
-          }
-        }
-      })
-    );
-
-    graphQlMock.query = queryStub;
-
-    sendMailSpy = sinon.spy();
-
-    mailTransportMock.sendMail = sendMailSpy;
-    
-    decisionCreateSpy = sinon.spy(function(opts) {
-      opts.id = 1;
-      return Promise.resolve(opts);
-    });
-    
-    DecisionMock.create = decisionCreateSpy;
+    queryStub.resetHistory();
+    sendMailSpy.reset();
+    decisionCreateSpy.reset();
   });
 
   it('should load', function() {
@@ -126,7 +123,7 @@ describe('decisionMaker', function() {
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
 
           expect(decision.MeetingId).to.equal(1);
@@ -219,9 +216,9 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
+
       meeting.id = 1;
-      
+
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
           expect(decision.MeetingId).to.equal(1);
@@ -229,12 +226,12 @@ describe('decisionMaker', function() {
           expect(decision.minutesIn).to.equal(480);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
           expect(decision.cantMake).to.deep.equal([]);
-          
+
           expect(decision.nameOfLocation).to.equal(fakeBiz.name);
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
         });
     });
@@ -318,20 +315,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
+
       meeting.id = 1;
-
-      var queryStub = sinon.stub().returns(
-        Promise.resolve({
-          data: {
-            search: {
-              business: [fakeBiz]
-            }
-          }
-        })
-      );
-
-      graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
@@ -340,12 +325,12 @@ describe('decisionMaker', function() {
           expect(decision.minutesIn).to.equal(480);
           expect(decision.canMake).to.deep.equal([1, 3]);
           expect(decision.cantMake).to.deep.equal([2]);
-          
+
           expect(decision.nameOfLocation).to.equal(fakeBiz.name);
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
         });
     });
@@ -452,20 +437,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
+
       meeting.id = 1;
-
-      var queryStub = sinon.stub().returns(
-        Promise.resolve({
-          data: {
-            search: {
-              business: [fakeBiz]
-            }
-          }
-        })
-      );
-
-      graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
@@ -474,12 +447,12 @@ describe('decisionMaker', function() {
           expect(decision.minutesIn).to.equal(960);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
           expect(decision.cantMake).to.deep.equal([]);
-          
+
           expect(decision.nameOfLocation).to.equal(fakeBiz.name);
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
         });
     });
@@ -579,20 +552,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
+
       meeting.id = 1;
-
-      var queryStub = sinon.stub().returns(
-        Promise.resolve({
-          data: {
-            search: {
-              business: [fakeBiz]
-            }
-          }
-        })
-      );
-
-      graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
@@ -601,12 +562,12 @@ describe('decisionMaker', function() {
           expect(decision.minutesIn).to.equal(960);
           expect(decision.canMake).to.deep.equal([2, 3]);
           expect(decision.cantMake).to.deep.equal([1]);
-          
+
           expect(decision.nameOfLocation).to.equal(fakeBiz.name);
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
         });
     });
@@ -704,20 +665,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
+
       meeting.id = 1;
-
-      var queryStub = sinon.stub().returns(
-        Promise.resolve({
-          data: {
-            search: {
-              business: [fakeBiz]
-            }
-          }
-        })
-      );
-
-      graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
@@ -731,7 +680,7 @@ describe('decisionMaker', function() {
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
         });
     });
@@ -844,20 +793,8 @@ describe('decisionMaker', function() {
       meeting.getResponses = function() {
         return Promise.resolve(responses);
       };
-      
+
       meeting.id = 1;
-
-      var queryStub = sinon.stub().returns(
-        Promise.resolve({
-          data: {
-            search: {
-              business: [fakeBiz]
-            }
-          }
-        })
-      );
-
-      graphQlMock.query = queryStub;
 
       return decisionMaker.makeDecision(meeting)
         .then(function([responses, decision]) {
@@ -866,12 +803,12 @@ describe('decisionMaker', function() {
           expect(decision.minutesIn).to.equal(930);
           expect(decision.canMake).to.deep.equal([1, 2, 3]);
           expect(decision.cantMake).to.deep.equal([]);
-          
+
           expect(decision.nameOfLocation).to.equal(fakeBiz.name);
           expect(decision.address).to.equal(fakeBiz.location.formatted_address);
 
           expect(queryStub.calledOnce).to.equal(true);
-          
+
           expect(decisionCreateSpy.calledOnce).to.equal(true);
         });
     });
@@ -903,74 +840,6 @@ describe('decisionMaker', function() {
       expect(sendMailSpy.calledWith(
         sinon.match({
           to: 'fakeemail1, fakeemail2, fakeemail3'
-        })
-      )).to.equal(true);
-    });
-
-    it('should send an email containing the time', function() {
-      var responses = [
-        {
-          email: 'fakeemail1'
-        },
-        {
-          email: 'fakeemail2'
-        },
-        {
-          email: 'fakeemail3'
-        }
-      ];
-      var time = {
-        day: 4,
-        minutesIn: 450,
-        canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-        cantMake: []
-      };
-      decisionMaker.sendEmailTo(responses, time, fakeBiz);
-
-      expect(sendMailSpy.calledOnce).to.equal(true);
-
-      var timeString = '7:30am';
-      var dayString = 'Thursday';
-
-      expect(sendMailSpy.calledWith(
-        sinon.match({
-          text: sinon.match(function(text) {
-            return text.indexOf(timeString) !== -1 && text.indexOf(dayString) !== -1;
-          })
-        })
-      )).to.equal(true);
-    });
-
-    it('should send an email containing the place name and address', function() {
-      var responses = [
-        {
-          email: 'fakeemail1'
-        },
-        {
-          email: 'fakeemail2'
-        },
-        {
-          email: 'fakeemail3'
-        }
-      ];
-      var time = {
-        day: 4,
-        minutesIn: 450,
-        canMake: ['fakeemail1', 'fakeemail2', 'fakeemail3'],
-        cantMake: []
-      };
-      decisionMaker.sendEmailTo(responses, time, fakeBiz);
-
-      expect(sendMailSpy.calledOnce).to.equal(true);
-
-      var placeName = fakeBiz.name;
-      var placeAddress = fakeBiz.location.formatted_address;
-
-      expect(sendMailSpy.calledWith(
-        sinon.match({
-          text: sinon.match(function(text) {
-            return text.indexOf(placeName) !== -1 && text.indexOf(placeAddress) !== -1;
-          })
         })
       )).to.equal(true);
     });
