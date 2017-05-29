@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "body-parser": "^1.13.3",
+    "chai-http": "^3.0.0",
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",

@@ -1,7 +1,7 @@
 **/node_modules
-src/client/build
+client/build
 **/coverage
 **/npm-debug.log
 **/.nyc_output
-src/server/config/config.js
 **/.env
+server/config/config.js
