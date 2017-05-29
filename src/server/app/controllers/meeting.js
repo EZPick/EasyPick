@@ -10,7 +10,10 @@ router.get('/get', function (req, res, next) {
   db.Meeting.findOne({
     where: {
 	  	id: req.params.id,
-		}
+		},
+		include: [{
+			model: db.response
+		}]
   }).then(function(meeting) {
     res.json({
 	  	success : true,
