@@ -184,8 +184,13 @@ function determineCategory(responses) {
     }
   }
 
-  // TODO
-  return 'coffee shop';
+  if (first === 'foodAndDrink') {
+    return 'cafe';
+  } else if (first === 'quiet' || second === 'quiet') {
+    return 'library';
+  } else {
+    return 'coffee shop';
+  }
 }
 
 function determinePlace(responses, time, meeting) {
