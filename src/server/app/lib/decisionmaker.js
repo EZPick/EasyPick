@@ -250,12 +250,12 @@ module.exports = {
           var resp = responses.filter(x => x.email === email)[0];
           cantMake.push(resp.id);
         });
-        
+
         return Promise.all([
           Promise.resolve(responses),
           db.Decision.create({
-            address: place.location.formatted_address,
-            nameOfLocation: place.name,
+            address: place == null ? null : place.location.formatted_address,
+            nameOfLocation: place == null ? null : place.name,
             dayOfWeek: time.day,
             minutesIn: time.minutesIn,
             canMake: canMake,
