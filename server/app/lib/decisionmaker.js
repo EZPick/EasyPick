@@ -30,6 +30,10 @@ var sendDecisionEmail = transporter
     }
   );
 
+function isOpenAt(hours, momentTime) {
+  return true;
+}
+
 function calculateBufferAround(slot, day, durationFloored) {
   var bufferBeforeSlot = slot;
 
@@ -211,6 +215,14 @@ function determinePlace(responses, time, meeting) {
              ) {
         business {
           name
+          hours {
+            open {
+              day
+              start
+              end
+              is_overnight
+            }
+          }
           location {
             formatted_address
           }
@@ -220,7 +232,13 @@ function determinePlace(responses, time, meeting) {
 
   return yelp.query(query)
     .then(function(json) {
-      return Promise.resolve(json.data.search.business[0]);
+      var businesses = json.data.search.business;
+      for (var i = 0; i < businesses.length; i++) {
+        if (isOpenAt(businesses[i].hours, momentTime)) {
+          return Promise.resolve(businesses[i]);
+        }
+      }
+      return Promise.resolve(null);
     });
 }
 
