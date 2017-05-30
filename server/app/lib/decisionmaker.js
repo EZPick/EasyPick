@@ -30,8 +30,47 @@ var sendDecisionEmail = transporter
     }
   );
 
-function isOpenAt(hours, momentTime) {
-  return true;
+function militaryToMoment(military, day) {
+  return moment().day(day)
+    .hours(military.slice(0, 2))
+    .minutes(military.slice(2, 4))
+    .seconds(0)
+    .milliseconds(0);
+}
+
+function isOpenAt(hoursArray, momentTime) {
+  var day = momentTime.day();
+  console.log(hoursArray);
+  for (var i = 0; i < hoursArray.length; i++) {
+    var hoursSpan = hoursArray[i].open;
+    console.log(hoursSpan);
+    var startMoment = militaryToMoment(hoursSpan.start, day);
+    var endMoment = militaryToMoment(hoursSpan.end, day);
+    if (hoursSpan.day === day) {
+      if (!hoursSpan.is_overnight) {
+        // This means that the startMoment is before the endMoment
+        // (i.e. they do not span midnight)
+        if (momentTime.isBetween(startMoment, endMoment)) {
+          return true;
+        }
+      } else {
+        // This effectively means that the actual span is from startMoment ->
+        // midnight -> endMoment
+        // Because the day matched, we just have to check if it's after the
+        // startMoment
+        if (momentTime.isAfter(startMoment)) {
+          return true;
+        }
+      }
+    } else if (hoursSpan.day + 1 === day && hoursSpan.is_overnight) {
+      // This might match if it's in the wee hours
+      // This is the midnight -> endMoment part of the range
+      if (momentTime.isBefore(endMoment)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function calculateBufferAround(slot, day, durationFloored) {
@@ -234,7 +273,8 @@ function determinePlace(responses, time, meeting) {
     .then(function(json) {
       var businesses = json.data.search.business;
       for (var i = 0; i < businesses.length; i++) {
-        if (isOpenAt(businesses[i].hours, momentTime)) {
+        // Hours is an array for some reason?
+        if (isOpenAt(businesses[i].hours[0], momentTime)) {
           return Promise.resolve(businesses[i]);
         }
       }
