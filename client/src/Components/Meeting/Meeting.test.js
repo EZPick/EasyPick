@@ -1,9 +1,13 @@
 import React from 'react';
+import { MemoryRouter, Route } from 'react-router';
 import ReactDOM from 'react-dom';
 import Meeting from './Meeting';
 
 it('renders without crashing', () => {
-  var match = {params: {id: '0'}};
   const div = document.createElement('div');
-  ReactDOM.render(<Meeting match={match} />, div);
+  ReactDOM.render(
+    (<MemoryRouter initialEntries={[ '/meeting/1' ]}>
+      <Route path="meeting/:id" component={Meeting} />
+    </MemoryRouter>),
+  div);
 });
