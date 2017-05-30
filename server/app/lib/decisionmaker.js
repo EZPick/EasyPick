@@ -40,10 +40,8 @@ function militaryToMoment(military, day) {
 
 function isOpenAt(hoursArray, momentTime) {
   var day = momentTime.day();
-  console.log(hoursArray);
   for (var i = 0; i < hoursArray.open.length; i++) {
     var hoursSpan = hoursArray.open[i];
-    console.log(hoursSpan);
     var startMoment = militaryToMoment(hoursSpan.start, day);
     var endMoment = militaryToMoment(hoursSpan.end, day);
     if (hoursSpan.day === day) {
