@@ -9,7 +9,20 @@ var fakeBiz = {
   name: 'Fake Business',
   location: {
     formatted_address: 'Fake Address'
-  }
+  },
+  hours: [
+    {
+      open: [
+        { day: 0, start: '0000', end: '0000', is_overnight: true },
+        { day: 1, start: '0000', end: '0000', is_overnight: true },
+        { day: 2, start: '0000', end: '0000', is_overnight: true },
+        { day: 3, start: '0000', end: '0000', is_overnight: true },
+        { day: 4, start: '0000', end: '0000', is_overnight: true },
+        { day: 5, start: '0000', end: '0000', is_overnight: true },
+        { day: 6, start: '0000', end: '0000', is_overnight: true }
+      ]
+    }
+  ]
 };
 
 var queryStub = sinon.stub().returns(
