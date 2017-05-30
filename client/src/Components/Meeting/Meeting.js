@@ -42,7 +42,7 @@ class Meeting extends Component {
 							})}
 						</tbody>
 				</table>
-				<Link to='/meeting/1'>Respond to Meeting Here</Link>
+				<Link to={'/respond/' + this.props.match.params.id }>Respond to Meeting Here</Link>
       </div>
     );
   }
