@@ -3,16 +3,16 @@ var express = require('express'),
   db = require('../models');
 
 module.exports = function (app) {
-  app.use('/api/meeting/', router);
+  app.use('/meeting', router);
 };
 
 router.get('/get', function (req, res, next) {
   db.Meeting.findOne({
     where: {
-	  	id: req.params.id,
+	  	id: req.query.id,
 		},
 		include: [{
-			model: db.response
+			model: db.Response,
 		}]
   }).then(function(meeting) {
     res.json({
@@ -32,14 +32,14 @@ router.post('/create', function(req, res, next) {
   db.Meeting.create({
   // set Model values	
 
-  	title : req.title,
-		closeoutTime : req.closeoutTime,
-		generalLocationLatitude : req.generalLocationLatitude,
-		generalLocationLongitude : req.generalLocationLongitude,
-		radius : req.radius,
-		duration : req.duration,
-		invited : req.invited,
-		creator : req.creator,
+  	title : req.body.title,
+		closeoutTime : req.body.closeoutTime,
+		generalLocationLatitude : req.body.generalLocationLatitude,
+		generalLocationLongitude : req.body.generalLocationLongitude,
+		radius : req.body.radius,
+		duration : req.body.duration,
+		invited : req.body.invited,
+		creator : req.body.creator,
 	
   }).then(function(result) {
     res.json({
