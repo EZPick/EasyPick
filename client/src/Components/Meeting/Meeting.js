@@ -9,7 +9,7 @@ class Meeting extends Component {
 		super(props);
 		this.state = {data: {Responses: []}};
 		$.ajax({
-					url: '/api/meeting/get/?id=1',
+					url: '/api/meeting/get/?id=' + this.props.match.params.id,
 					dataType: 'json',
 					cacheL: false,
 					success: function(data) {
@@ -27,16 +27,16 @@ class Meeting extends Component {
   render() {
     return (
       <div id='tableArea'>
-        <h1>Meeting : </h1>
+        <h1>{this.state.data.title}</h1>
 				<table>
 						<tbody>
 							<tr>
 								<th> Name </th>
 								<th> Email </th>
 							</tr>
-							{$.map(this.state.data.Responses, function(responder) { 
-								return (<tr key={responder['email']}> 
-												 <td>{responder['name']}</td> 
+							{$.map(this.state.data.Responses, function(responder) {
+								return (<tr key={responder['email']}>
+												 <td>{responder['name']}</td>
 												 <td>{responder['email']}</td>
 											 </tr>);
 							})}
