@@ -4,15 +4,15 @@ import './Location.css';
 class Location extends Component {
   render() {
     return (
-      <div>
-        <h1>Location</h1>
-        <div>This is a test.</div>
+      <div className="form-group">
+          <label>Location Preferences</label>
+          <input value={this.value()} name="schedule" className="form-control" />
       </div>
     );
   }
 
   value() {
-    // get the value
+    return "test_location_preference"
   }
 }
 
