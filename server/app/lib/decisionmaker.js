@@ -227,7 +227,7 @@ function determineCategory(responses) {
     }
   }
 
-  if (first === 'foodAndDrink') {
+  if (first === 'foodAndDrink' && second !== 'wifi') {
     return 'cafe';
   } else if (first === 'quiet' || second === 'quiet') {
     return 'library';
