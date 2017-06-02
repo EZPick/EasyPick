@@ -28,49 +28,51 @@ class Location extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
+      <div ref="outputDiv">
+        <form ref="form" onSubmit={this.handleSubmit}>
           <table>
-            <tr className="odd">
-              <td>
-                <label className="item">
-                  <input id="wifi" type="checkbox" value={this.state.wifi} onChange={this.handleChange} /> Wifi
-                </label>
-              </td>
-              <td>
-                <label className="item">
-                  <input id="privacy" type="checkbox" value={this.state.privacy} onChange={this.handleChange} /> Privacy
-                </label>
-              </td>
-              <td>
-                <label className="item">
-                  <input id="quiet" type="checkbox" value={this.state.quiet} onChange={this.handleChange} /> Quiet
-                </label>
-              </td>
-              <td>
-                <label className="item">
-                  <input id="foodAndDrink" type="checkbox" value={this.state.foodAndDrink} onChange={this.handleChange} /> Food and Drink
-                </label>
-              </td>
-            </tr>
+            <tbody>
+              <tr className="odd">
+                <td>
+                  <label className="item">
+                    <input id="wifi" type="checkbox" ref="wif" value={this.state.wifi} onChange={this.handleChange} /> Wifi
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    <input id="privacy" type="checkbox" ref="privacy" value={this.state.privacy} onChange={this.handleChange} /> Privacy
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    <input id="quiet" type="checkbox" ref="quiet" value={this.state.quiet} onChange={this.handleChange} /> Quiet
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    <input id="foodAndDrink" type="checkbox" ref="foodAndDrink" value={this.state.foodAndDrink} onChange={this.handleChange} /> Food and Drink
+                  </label>
+                </td>
+              </tr>
 
-            <tr className="even">
-              <td>
-                <label className="item">
-                  <input id="parking" type="checkbox" value={this.state.parking} onChange={this.handleChange} /> Parking
-                </label>
-              </td>
-              <td>
-                <label className="item">
-                  <input id="busLines" type="checkbox" value={this.state.busLines} onChange={this.handleChange} /> Close to Bus
-                </label>
-              </td>
-              <td>
-                <label className="item">
-                  <input id="openLate" type="checkbox" value={this.state.openLate} onChange={this.handleChange} /> Open Late
-                </label>
-              </td>
-            </tr>
+              <tr className="even">
+                <td>
+                  <label className="item">
+                    <input id="parking" type="checkbox" ref="parking" value={this.state.parking} onChange={this.handleChange} /> Parking
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    <input id="busLines" type="checkbox" ref="busLines" value={this.state.busLines} onChange={this.handleChange} /> Close to Bus
+                  </label>
+                </td>
+                <td>
+                  <label className="item">
+                    <input id="openLate" type="checkbox" ref="openLate" value={this.state.openLate} onChange={this.handleChange} /> Open Late
+                  </label>
+                </td>
+              </tr>
+            </tbody>
           </table>
           <input type="submit" value="Submit" />
         </form>

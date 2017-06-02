@@ -8,7 +8,18 @@ import Home from '../Home/Home';
 import Create from '../Create/Create';
 import Respond from '../Respond/Respond';
 import Meeting from '../Meeting/Meeting';
+import Location from '../Location/Location';
 import './App.css';
+
+/*
+class TableBody extends Component {
+  render() {
+    return(
+
+    );
+  }
+}
+*/
 
 class App extends Component {
   componentDidMount() {
@@ -25,6 +36,7 @@ class App extends Component {
           <Route exact path="/create" component={Create}/>
           <Route path="/respond/:id" component={Respond}/>
           <Route path="/meeting/:id" component={Meeting}/>
+          <Route path="/location" component={Location}/>
         </div>
       </Router>
     );
