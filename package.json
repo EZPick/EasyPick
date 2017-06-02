@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "start": "node production-app.js",
     "client:coverage": "npm run --prefix client test -- --coverage",
     "server:coverage": "npm run --prefix server test:coverage && npm run --prefix server test:lcov",
     "combine-coverage": "{ cat client/coverage/lcov.info; cat server/coverage/lcov.info; }",
@@ -11,5 +12,12 @@
   "devDependencies": {
     "coveralls": "^2.13.1",
     "lcov-result-merger": "^1.2.0"
-  }
+  },
+  "dependencies": {
+    "express": "^4.15.2"
+  },
+  "engines": {
+    "node": "7.4.0"
+  },
+  "cacheDirectories": ["node_modules", "client/node_modules", "server/node_modules"]
 }

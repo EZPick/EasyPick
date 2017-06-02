@@ -3,8 +3,18 @@ var fs = require('fs'),
   Sequelize = require('sequelize'),
   config = require('../../config/config'),
   db = {};
+  
+var dialectOptions = {};
 
-var sequelize = new Sequelize(config.db);
+if (process.env.NODE_ENV === 'production') {
+  dialectOptions = {
+    ssl: true
+  };
+}
+
+var sequelize = new Sequelize(config.db, {
+  dialectOptions: dialectOptions
+});
 
 fs.readdirSync(__dirname).filter(function (file) {
   return (file.indexOf('.') !== 0) && (file !== 'index.js');
