@@ -7,6 +7,23 @@ module.exports = function (app) {
 };
 
 router.post('/create', function (req, res, next) {
+  try {
+    JSON.parse(req.body.schedule);
+  } catch (e) {
+    res.json({
+      success: false
+    });
+    return;
+  }
+
+  try {
+    JSON.parse(req.body.locationPreferences)
+  } catch (e) {
+    res.json({
+      success: false
+    });
+    return;
+  }
   db.Response.create({
     name: req.body.name,
     email: req.body.email,
@@ -15,13 +32,11 @@ router.post('/create', function (req, res, next) {
     MeetingId: req.body.meetingId
   }).then(function(result) {
     res.json({
-      success: true,
-      data: result.dataValues
+      success: true
     });
   }).catch(function(err) {
     res.json({
-      success: false,
-      error: err
+      success: false
     });
   });
 });
