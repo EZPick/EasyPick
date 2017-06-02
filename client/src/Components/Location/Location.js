@@ -30,15 +30,18 @@ class Location extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Coffee: <input id="coffee" type="checkbox" value={this.state.coffee} onChange={this.handleChange} />
-            Tea: <input id="tea" type="checkbox" value={this.state.tea} onChange={this.handleChange} />
-            Fast Food: <input id="fastFood" type="checkbox" value={this.state.fastFood} onChange={this.handleChange} />
-            Quiet: <input id="quiet" type="checkbox" value={this.state.quiet} onChange={this.handleChange} />
-            Library: <input id="" type="checkbox" value={this.state.library} onChange={this.handleChange} />
-            Sit Down Restaurant: <input id="sitDown" type="checkbox" value={this.state.sitDown} onChange={this.handleChange} />
-
-            <input type="submit" value="Submit" />
+            Wifi: <input id="wifi" type="checkbox" value={this.state.wifi} onChange={this.handleChange} />
           </label>
+          <label>
+            Privacy: <input id="privacy" type="checkbox" value={this.state.privacy} onChange={this.handleChange} />
+          </label>
+          <label>
+            Quiet: <input id="quiet" type="checkbox" value={this.state.quiet} onChange={this.handleChange} />
+          </label>
+          <label>
+            Food and Drink: <input id="foodAndDrink" type="checkbox" value={this.state.foodAndDrink} onChange={this.handleChange} />
+          </label>
+          <input type="submit" value="Submit" />
         </form>
       </div>
     );
