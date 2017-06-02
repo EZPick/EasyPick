@@ -16,9 +16,6 @@ class Location extends Component {
     this.setState({privacy: event.target.privacy});
     this.setState({quiet: event.target.quiet});
     this.setState({foodAndDrink: event.target.foodAndDrink});
-    this.setState({parking: event.target.parking});
-    this.setState({parking: event.target.busLines});
-    this.setState({openLate: event.target.openLate});
   }
 
   handleSubmit(event) {
@@ -35,7 +32,7 @@ class Location extends Component {
               <tr className="odd">
                 <td>
                   <label className="item">
-                    <input id="wifi" type="checkbox" ref="wif" value={this.state.wifi} onChange={this.handleChange} /> Wifi
+                    <input id="wifi" type="checkbox" ref="wifi" value={this.state.wifi} onChange={this.handleChange} /> Wifi
                   </label>
                 </td>
                 <td>
@@ -51,24 +48,6 @@ class Location extends Component {
                 <td>
                   <label className="item">
                     <input id="foodAndDrink" type="checkbox" ref="foodAndDrink" value={this.state.foodAndDrink} onChange={this.handleChange} /> Food and Drink
-                  </label>
-                </td>
-              </tr>
-
-              <tr className="even">
-                <td>
-                  <label className="item">
-                    <input id="parking" type="checkbox" ref="parking" value={this.state.parking} onChange={this.handleChange} /> Parking
-                  </label>
-                </td>
-                <td>
-                  <label className="item">
-                    <input id="busLines" type="checkbox" ref="busLines" value={this.state.busLines} onChange={this.handleChange} /> Close to Bus
-                  </label>
-                </td>
-                <td>
-                  <label className="item">
-                    <input id="openLate" type="checkbox" ref="openLate" value={this.state.openLate} onChange={this.handleChange} /> Open Late
                   </label>
                 </td>
               </tr>

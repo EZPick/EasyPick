@@ -11,16 +11,6 @@ import Meeting from '../Meeting/Meeting';
 import Location from '../Location/Location';
 import './App.css';
 
-/*
-class TableBody extends Component {
-  render() {
-    return(
-
-    );
-  }
-}
-*/
-
 class App extends Component {
   componentDidMount() {
     fetch('/api/meeting/1')
