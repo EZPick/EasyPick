@@ -1,6 +1,27 @@
 var express = require('express'),
   router = express.Router(),
-  db = require('../models');
+  db = require('../models'),
+  nodemailer = require('nodemailer'),
+  EmailTemplate = require('email-templates').EmailTemplate;
+
+var transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
+var sendInviteEmail = transporter
+  .templateSender(
+    new EmailTemplate('./app/email-templates/invite'),
+    {
+      subject: 'You have been invited to an EZPick meeting.',
+      from: process.env.EMAILS_FROM
+    }
+  );
 
 module.exports = function (app) {
   app.use('/meeting', router);
@@ -55,3 +76,30 @@ router.post('/create', function(req, res, next) {
 
 });
 
+router.post('/invite', function(req, res, next) {
+  var Meeting;
+  db.Meeting.findOne({
+    where: {
+	  	id: req.query.id,
+		},
+  }).then(function(meeting) {
+    // Make sure the model is being correctly found here
+    Meeting = meeting;
+  }).catch(function(err) {
+    res.json({
+	  	success : false,
+	    error : err,
+		});
+  });
+
+  return sendInviteEmail(
+    {
+      // Not sure if it's correctly done here
+      to: res.map(function(x) { return x.email; }).join(', ')
+    },
+    {
+      meetingTitle: Meeting.title,
+      link: '/respond/' + Meeting.id,
+    }
+  );
+});
