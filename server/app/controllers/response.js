@@ -10,7 +10,7 @@ router.post('/create', function (req, res, next) {
   try {
     JSON.parse(req.body.schedule);
   } catch (e) {
-    res.json({
+    res.status(500).json({
       success: false
     });
     return;
@@ -19,7 +19,7 @@ router.post('/create', function (req, res, next) {
   try {
     JSON.parse(req.body.locationPreferences)
   } catch (e) {
-    res.json({
+    res.status(500).json({
       success: false
     });
     return;
@@ -35,7 +35,7 @@ router.post('/create', function (req, res, next) {
       success: true
     });
   }).catch(function(err) {
-    res.json({
+    res.status(500).json({
       success: false
     });
   });
