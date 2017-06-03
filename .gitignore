@@ -4,3 +4,4 @@ client/build
 **/npm-debug.log
 **/.nyc_output
 server/config/config.js
+server/seed.js
