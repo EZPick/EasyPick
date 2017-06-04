@@ -2,9 +2,23 @@ import React, { Component } from 'react';
 import './Create.css';
 import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
-import $ from 'jquery';
+
+var $ = window.jQuery;
 
 class Create extends Component {
+  componentDidMount() {
+    $('#location-field').locationpicker({
+      radius: 300,
+      location: {
+        latitude: 47.6062,
+        longitude: -122.3321
+      },
+      inputBinding: {
+        radiusInput: $('[name=radius]')
+      }
+    });
+  }
+
   render() {
     return (
       <div>
@@ -34,24 +48,18 @@ class Create extends Component {
                   <input name="closeoutTime" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
                 </div>
 
-                {/*TODO*/}
-                <div className="form-group">
-                  <label>General Location Lat</label>
-                  <input name="generalLocationLatitude" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
-                </div>
-                <div className="form-group">
-                  <label>General Location Lon</label>
-                  <input name="generalLocationLongitude" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
-                </div>
                 {/*radius field*/}
                 <div className="form-group">
                   <label>Radius</label>
-                  <input name="radius" className="form-control" type="text" placeholder="Type the radius in meters the meeting should be within" required />
+                  <input name="radius" className="form-control" type="number" placeholder="Type the radius in meters the meeting should be within" required />
                 </div>
+
+                <div id="location-field" style={{height: '400px'}}></div>
+
                 {/*duration field*/}
                 <div className="form-group">
                   <label>Duration</label>
-                  <input name="duration" className="form-control" type="text" placeholder="Type the duration of the meeting in minutes" required />
+                  <input name="duration" className="form-control" type="number" step="30" min="0" max="600" placeholder="Type the duration of the meeting in minutes" required />
                 </div>
                 {/*name field*/}
                 <div className="form-group">
