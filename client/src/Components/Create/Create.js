@@ -6,10 +6,22 @@ import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
 import jQuery from 'jquery';
 var $ = window.jQuery;
+import moment from 'moment';
 
 $ = $ || jQuery;
 
 $.fn.locationpicker = $.fn.locationpicker || function() {};
+
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
 
 class Create extends Component {
   componentDidMount() {
@@ -46,7 +58,7 @@ class Create extends Component {
           <div className="row" id="response-row">
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
-              <form id="creation-form" onSubmit={this.submit}>
+              <form id="creation-form" onSubmit={this.submit.bind(this)}>
                 {/*title field*/}
                 <div className="form-group">
                   <label>Meeting Name</label>
@@ -93,12 +105,12 @@ class Create extends Component {
 
                 {/*location field*/}
                 <div className="form-group">
-                  <Location />
+                  <Location ref="location"/>
                 </div>
 
                 {/*schedule field*/}
                 <div className="form-group">
-                  <Schedule />
+                  <Schedule ref="schedule"/>
                 </div>
 
                 {/*button to submit*/}
@@ -143,21 +155,24 @@ class Create extends Component {
 
     e.preventDefault();
 
-    let form = $('#creation-form');
+    var data = getFormData($('#creation-form'));
+    data.schedule = this.refs.schedule.value();
+    data.location_preferences = this.refs.location.value();
+    data.closeoutTime = moment(data.closeoutTime, 'DD/MM/YYYY h:mm A').toISOString();
 
     $.ajax({
         type: 'POST',
         url: '/api/meeting/create',
-        data: form.serialize()
+        data: $.param(data)
     })
     .done(function(data) {
-        $('#creation-form')[0].reset();
-        $('#title').hide();
-        $('#response-row').hide();
-        $('#confirmation-row').fadeIn();
+      $('#creation-form')[0].reset();
+      $('#title').hide();
+      $('#response-row').hide();
+      $('#confirmation-row').fadeIn();
     })
     .fail(function(jqXhr) {
-        $('#error-row').fadeIn();
+      $('#error-row').fadeIn();
     });
   }
 }
