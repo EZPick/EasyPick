@@ -17,8 +17,8 @@ class Schedule extends Component {
       },
       // Only permit selections within one day
       selectConstraint:{
-        start: '00:01',
-        end: '23:59',
+        start: '00:00',
+        end: '24:00',
       },
       columnFormat: 'ddd',
       select: function (start, end, jsEvent, view) {
