@@ -12,9 +12,9 @@ import './App.css';
 
 class App extends Component {
   componentDidMount() {
-    fetch('/api/meeting/1')
-      .then(res => res.json())
-      .then(meeting => this.setState({ meeting }));
+    //fetch('/api/meeting/1')
+      //.then(res => res.json())
+      //.then(meeting => this.setState({ meeting }));
   }
 
   render() {
