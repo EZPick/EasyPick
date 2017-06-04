@@ -5,6 +5,7 @@
   "dependencies": {
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "jquery": "^3.2.1",
+    "fullcalendar": "^3.4.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.1.1",

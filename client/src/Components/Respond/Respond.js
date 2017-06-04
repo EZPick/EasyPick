@@ -4,6 +4,17 @@ import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
 import $ from 'jquery';
 
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
 class Respond extends Component {
   render() {
     return (
@@ -28,7 +39,7 @@ class Respond extends Component {
             <div className="row" id="response-row">
                 <div className="col-sm-3"></div>
                 <div className="col-sm-6">
-                    <form id="response-form" onSubmit={this.submit}>
+                    <form id="response-form" onSubmit={this.submit.bind(this)}>
                         <input type="hidden" value={this.props.match.params.id} name="meetingId" />
                         <div className="form-group">
                             <label>Name</label>
@@ -39,10 +50,10 @@ class Respond extends Component {
                             <input name="email" className="form-control" type="text" placeholder="Email" required />
                         </div>
                         <div className="form-group">
-                            <Location />
+                            <Location ref="location" />
                         </div>
                         <div className="form-group">
-                            <Schedule />
+                            <Schedule ref="schedule" />
                         </div>
                         <div className="form-group" id="btn-container">
                             <button type="submit" className="btn btn-primary" id="submit-btn">
@@ -73,12 +84,14 @@ class Respond extends Component {
 
     e.preventDefault();
 
-    let form = $('#response-form');
+    var data = getFormData($('#response-form'));
+    data.schedule = this.refs.schedule.value();
+    data.location_preferences = this.refs.location.value();
 
     $.ajax({
         type: 'POST',
         url: '/api/response/create',
-        data: form.serialize()
+        data: $.param(data)
     })
     .done(function(data) {
       $('#response-form')[0].reset();
