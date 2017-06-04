@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Create.css';
+import dateTimePicker from 'eonasdan-bootstrap-datetimepicker';
+import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
 import jQuery from 'jquery';
@@ -23,6 +25,8 @@ class Create extends Component {
         longitudeInput: $('[name=generalLocationLongitude]')
       }
     });
+
+    (dateTimePicker.bind($('#datetimepicker')))();
   }
 
   render() {
@@ -51,7 +55,12 @@ class Create extends Component {
                 {/*closeout time field*/}
                 <div className="form-group">
                   <label>Close-out Time</label>
-                  <input name="closeoutTime" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
+                  <div className='input-group date' id='datetimepicker'>
+                    <input name="closeoutTime" type='text' className="form-control" />
+                    <span className="input-group-addon">
+                        <span className="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
                 </div>
 
                 {/*radius field*/}
