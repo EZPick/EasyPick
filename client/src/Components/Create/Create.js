@@ -4,14 +4,32 @@ import dateTimePicker from 'eonasdan-bootstrap-datetimepicker';
 import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
+import SendInvites from '../SendInvites/SendInvites';
 import jQuery from 'jquery';
 var $ = window.jQuery;
+import moment from 'moment';
 
 $ = $ || jQuery;
 
 $.fn.locationpicker = $.fn.locationpicker || function() {};
 
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
 class Create extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {meetingId: null};
+  }
+
   componentDidMount() {
     $('#location-field').locationpicker({
       radius: 300,
@@ -46,7 +64,7 @@ class Create extends Component {
           <div className="row" id="response-row">
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
-              <form id="creation-form" onSubmit={this.submit}>
+              <form id="creation-form" onSubmit={this.submit.bind(this)}>
                 {/*title field*/}
                 <div className="form-group">
                   <label>Meeting Name</label>
@@ -93,12 +111,12 @@ class Create extends Component {
 
                 {/*location field*/}
                 <div className="form-group">
-                  <Location />
+                  <Location ref="location"/>
                 </div>
 
                 {/*schedule field*/}
                 <div className="form-group">
-                  <Schedule />
+                  <Schedule ref="schedule"/>
                 </div>
 
                 {/*button to submit*/}
@@ -119,6 +137,7 @@ class Create extends Component {
             </div>
             <div className="col-sm-3"></div>
           </div>
+          {this.state.meetingId && <SendInvites meetingId={this.state.meetingId}/>}
           <div className="row" id="error-row">
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
@@ -133,31 +152,31 @@ class Create extends Component {
     );
   }
 
-  openPopup() {
-    // Open the create invites popup
-  }
-
   submit(e) {
     // Post creation data to server
     $('#error-row').hide();
 
     e.preventDefault();
 
-    let form = $('#creation-form');
+    var data = getFormData($('#creation-form'));
+    data.schedule = this.refs.schedule.value();
+    data.locationPreferences = this.refs.location.value();
+    data.closeoutTime = moment(data.closeoutTime, 'MM/DD/YYYY h:mm A').toISOString();
 
     $.ajax({
         type: 'POST',
         url: '/api/meeting/create',
-        data: form.serialize()
+        data: $.param(data)
     })
-    .done(function(data) {
-        $('#creation-form')[0].reset();
-        $('#title').hide();
-        $('#response-row').hide();
-        $('#confirmation-row').fadeIn();
+    .done(data => {
+      $('#creation-form')[0].reset();
+      $('#title').hide();
+      $('#response-row').hide();
+      $('#confirmation-row').fadeIn();
+      this.setState({meetingId: data.data.id});
     })
     .fail(function(jqXhr) {
-        $('#error-row').fadeIn();
+      $('#error-row').fadeIn();
     });
   }
 }

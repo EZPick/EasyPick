@@ -23,7 +23,7 @@ var transporter = nodemailer.createTransport({
 
 var sendDecisionEmail = transporter
   .templateSender(
-    new EmailTemplate('./app/email-templates/decision'),
+    new EmailTemplate(process.env.NODE_ENV == 'production' ? './server/app/email-templates/decision' : './app/email-templates/decision'),
     {
       subject: 'Your Meeting Has Been Scheduled',
       from: process.env.EMAILS_FROM
@@ -207,7 +207,7 @@ function determineCategory(responses) {
 
   Object.keys(attributeCounts).forEach(function(attr) {
     responses.forEach(function(response) {
-      if (response[attr]) {
+      if (response[attr] && response[attr].toString() === 'true') {
         attributeCounts[attr]++;
       }
     });

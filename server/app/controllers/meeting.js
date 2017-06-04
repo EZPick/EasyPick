@@ -16,7 +16,7 @@ var transporter = nodemailer.createTransport({
 
 var sendInviteEmail = transporter
   .templateSender(
-    new EmailTemplate('./app/email-templates/invite'),
+    new EmailTemplate(process.env.NODE_ENV == 'production' ? './server/app/email-templates/invite' : './app/email-templates/invite'),
     {
       subject: 'You have been invited to an EZPick meeting.',
       from: process.env.EMAILS_FROM
@@ -79,15 +79,15 @@ router.post('/create', function(req, res, next) {
     radius: req.body.radius,
     duration: req.body.duration,
     invited: [],
-    creator: req.body.creator,
-    responses: [{
+    creator: req.body.email,
+    Responses: [{
       name: req.body.name,
       email: req.body.email,
       schedule: req.body.schedule,
       locationPreferences: req.body.locationPreferences
     }]
   }, {
-    include: [db.Meeting.Responses]
+    include: [{association: db.Meeting.Responses}]
   }).then(function(result) {
     res.json({
       success: true,
@@ -131,7 +131,8 @@ router.post('/invite', function(req, res, next) {
   })
   .catch(function(err) {
     res.status(500).json({
-      success: false
+      success: false,
+      err: err
     });
   });
 });
