@@ -9,7 +9,7 @@ class Meeting extends Component {
     super(props);
     this.state = {data: {Responses: []}};
     $.ajax({
-          url: '/api/meeting/get/?id=' + this.props.match.params.id,
+          url: '/api/meeting/' + this.props.match.params.id,
           dataType: 'json',
           cacheL: false,
           success: function(data) {
