@@ -157,8 +157,8 @@ class Create extends Component {
 
     var data = getFormData($('#creation-form'));
     data.schedule = this.refs.schedule.value();
-    data.location_preferences = this.refs.location.value();
-    data.closeoutTime = moment(data.closeoutTime, 'DD/MM/YYYY h:mm A').toISOString();
+    data.locationPreferences = this.refs.location.value();
+    data.closeoutTime = moment(data.closeoutTime, 'MM/DD/YYYY h:mm A').toISOString();
 
     $.ajax({
         type: 'POST',
