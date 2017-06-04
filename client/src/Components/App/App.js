@@ -19,14 +19,22 @@ class App extends Component {
 
   render() {
     return (
-      <Router className="App">
-        <div>
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/create" component={Create}/>
-          <Route path="/respond/:id" component={Respond}/>
-          <Route path="/meeting/:id" component={Meeting}/>
+      <div>
+        <div className="header clearfix">
+          <h3 className="text-muted">EasyPick</h3>
         </div>
-      </Router>
+        <Router className="App">
+          <div>
+            <Route exact path="/" component={Home}/>
+            <Route exact path="/create" component={Create}/>
+            <Route path="/respond/:id" component={Respond}/>
+            <Route path="/meeting/:id" component={Meeting}/>
+          </div>
+        </Router>
+        <footer className="footer">
+          <p>&copy; 2017 EasyPick, Inc.</p>
+        </footer>
+      </div>
     );
   }
 }

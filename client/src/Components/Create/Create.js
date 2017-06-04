@@ -32,7 +32,7 @@ class Create extends Component {
                   <input name="name" className="form-control" type="text" placeholder="Type your name" required />
                 </div>
 
-                {/*email field*/}                
+                {/*email field*/}
                 <div className="form-group">
                   <label>Email</label>
                   <input name="email" className="form-control" type="text" placeholder="Type your email" required />
@@ -56,7 +56,7 @@ class Create extends Component {
                 </div>
               </form>
             </div>
-  
+
             <div className="col-sm-3"></div>
           </div>
           <div className="row" id="confirmation-row">
@@ -108,9 +108,6 @@ class Create extends Component {
       .fail(function(jqXhr) {
           $('#error-row').fadeIn();
       });
-
-
-
   }
 }
 
