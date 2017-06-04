@@ -4,6 +4,7 @@ import dateTimePicker from 'eonasdan-bootstrap-datetimepicker';
 import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
+import SendInvites from '../SendInvites/SendInvites';
 import jQuery from 'jquery';
 var $ = window.jQuery;
 import moment from 'moment';
@@ -24,6 +25,11 @@ function getFormData($form){
 }
 
 class Create extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {meetingId: null};
+  }
+
   componentDidMount() {
     $('#location-field').locationpicker({
       radius: 300,
@@ -131,6 +137,7 @@ class Create extends Component {
             </div>
             <div className="col-sm-3"></div>
           </div>
+          {this.state.meetingId && <SendInvites meetingId={this.state.meetingId}/>}
           <div className="row" id="error-row">
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
@@ -143,10 +150,6 @@ class Create extends Component {
         </div>
       </div>
     );
-  }
-
-  openPopup() {
-    // Open the create invites popup
   }
 
   submit(e) {
@@ -165,11 +168,12 @@ class Create extends Component {
         url: '/api/meeting/create',
         data: $.param(data)
     })
-    .done(function(data) {
+    .done(data => {
       $('#creation-form')[0].reset();
       $('#title').hide();
       $('#response-row').hide();
       $('#confirmation-row').fadeIn();
+      this.setState({meetingId: data.data.id});
     })
     .fail(function(jqXhr) {
       $('#error-row').fadeIn();
