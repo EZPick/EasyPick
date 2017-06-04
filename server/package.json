@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "debug": "^2.6.6",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
@@ -41,7 +42,7 @@
     "mocha": "^3.3.0",
     "mockery": "^2.0.0",
     "nyc": "^10.3.0",
-    "sinon": "^2.2.0",
+    "sinon": "^2.3.2",
     "supertest": "^2.0.1"
   },
   "nyc": {
