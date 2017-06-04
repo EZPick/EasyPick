@@ -53,7 +53,7 @@ class Location extends Component {
   }
 
   value() {
-
+    // get the value? not sure why we need this?
   }
 }
 
