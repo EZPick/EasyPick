@@ -18,7 +18,9 @@ class Create extends Component {
         longitude: -122.3321
       },
       inputBinding: {
-        radiusInput: $('[name=radius]')
+        radiusInput: $('[name=radius]'),
+        latitudeInput: $('[name=generalLocationLatitude]'),
+        longitudeInput: $('[name=generalLocationLongitude]')
       }
     });
   }
@@ -57,6 +59,9 @@ class Create extends Component {
                   <label>Radius</label>
                   <input name="radius" className="form-control" type="number" placeholder="Type the radius in meters the meeting should be within" required />
                 </div>
+
+                <input type="hidden" name="generalLocationLatitude" />
+                <input type="hidden" name="generalLocationLongitude" />
 
                 <div id="location-field" style={{height: '400px'}}></div>
 
