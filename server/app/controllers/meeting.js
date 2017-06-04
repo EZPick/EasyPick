@@ -80,14 +80,14 @@ router.post('/create', function(req, res, next) {
     duration: req.body.duration,
     invited: [],
     creator: req.body.creator,
-    responses: [{
+    Responses: [{
       name: req.body.name,
       email: req.body.email,
       schedule: req.body.schedule,
       locationPreferences: req.body.locationPreferences
     }]
   }, {
-    include: [db.Meeting.Responses]
+    include: [{association: db.Meeting.Responses}]
   }).then(function(result) {
     res.json({
       success: true,
