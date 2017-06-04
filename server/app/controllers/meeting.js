@@ -34,6 +34,8 @@ router.get('/:id', function (req, res, next) {
     },
     include: [{
       model: db.Response,
+    }, {
+      model: db.Decision
     }]
   }).then(function(meeting) {
     res.json({
