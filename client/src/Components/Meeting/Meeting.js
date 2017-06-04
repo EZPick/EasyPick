@@ -5,44 +5,44 @@ import { Link } from 'react-router-dom';
 
 class Meeting extends Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {data: {Responses: []}};
-		$.ajax({
-					url: '/api/meeting/get/?id=' + this.props.match.params.id,
-					dataType: 'json',
-					cacheL: false,
-					success: function(data) {
-						this.setState({data: data.data });
-					}.bind(this),
-						error: function(xhr, status, err) {
-								console.log("SOI SOI SOI SOI ERROR");
-								return err;
-						}
-		 });
+  constructor(props) {
+    super(props);
+    this.state = {data: {Responses: []}};
+    $.ajax({
+          url: '/api/meeting/get/?id=' + this.props.match.params.id,
+          dataType: 'json',
+          cacheL: false,
+          success: function(data) {
+            this.setState({data: data.data });
+          }.bind(this),
+          error: function(xhr, status, err) {
+              console.log("SOI SOI SOI SOI ERROR");
+              return err;
+          }
+     });
 
-	}
+  }
 
 
   render() {
     return (
       <div id='tableArea'>
         <h1>{this.state.data.title}</h1>
-				<table>
-						<tbody>
-							<tr>
-								<th> Name </th>
-								<th> Email </th>
-							</tr>
-							{$.map(this.state.data.Responses, function(responder) {
-								return (<tr key={responder['email']}>
-												 <td>{responder['name']}</td>
-												 <td>{responder['email']}</td>
-											 </tr>);
-							})}
-						</tbody>
-				</table>
-				<Link to={'/respond/' + this.props.match.params.id }>Respond to Meeting Here</Link>
+        <table>
+            <tbody>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+              {$.map(this.state.data.Responses, function(responder) {
+                return (<tr key={responder['email']}>
+                         <td>{responder['name']}</td>
+                         <td>{responder['email']}</td>
+                       </tr>);
+              })}
+            </tbody>
+        </table>
+        <Link to={'/respond/' + this.props.match.params.id }>Respond to Meeting Here</Link>
       </div>
     );
   }
