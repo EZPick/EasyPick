@@ -7,8 +7,36 @@ module.exports = function (app) {
 };
 
 router.post('/create', function (req, res, next) {
-  // Accept args in the form body
-  res.json({
-    success: true
+  try {
+    JSON.parse(req.body.schedule);
+  } catch (e) {
+    res.status(500).json({
+      success: false
+    });
+    return;
+  }
+
+  try {
+    JSON.parse(req.body.locationPreferences)
+  } catch (e) {
+    res.status(500).json({
+      success: false
+    });
+    return;
+  }
+  db.Response.create({
+    name: req.body.name,
+    email: req.body.email,
+    schedule: req.body.schedule,
+    locationPreferences: req.body.locationPreferences,
+    MeetingId: req.body.meetingId
+  }).then(function(result) {
+    res.json({
+      success: true
+    });
+  }).catch(function(err) {
+    res.status(500).json({
+      success: false
+    });
   });
 });

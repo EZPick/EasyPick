@@ -1,0 +1,19 @@
+#response-form input {
+    display: block;
+}
+
+#error-row, #confirmation-row {
+    display: none;
+}
+
+#error-row .alert {
+    margin-top: 2em;
+}
+
+#title, #btn-container, .alert {
+    text-align: center;
+}
+
+.alert {
+    margin-top: 4em;
+}
