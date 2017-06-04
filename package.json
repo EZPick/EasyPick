@@ -14,10 +14,15 @@
     "lcov-result-merger": "^1.2.0"
   },
   "dependencies": {
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "node-schedule": "^1.2.3"
   },
   "engines": {
     "node": "7.4.0"
   },
-  "cacheDirectories": ["node_modules", "client/node_modules", "server/node_modules"]
+  "cacheDirectories": [
+    "node_modules",
+    "client/node_modules",
+    "server/node_modules"
+  ]
 }
