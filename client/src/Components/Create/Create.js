@@ -10,25 +10,52 @@ class Create extends Component {
       <div>
         <div className="container">
           <div className="row">
-            {/*creation of new event title*/}
+            {/*creation of new meeting title*/}
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
-              <h1 id="title">Create an Event</h1>
+              <h1 id="title">Create a Meeting</h1>
             </div>
             <div className="col-sm-3"></div>
           </div>
 
-          {/*creation of new event form*/}
+          {/*creation of new meeting form*/}
           <div className="row" id="response-row">
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
               <form id="creation-form" onSubmit={this.submit}>
-                {/*response form needs an id*/}
-                <input type="hidden" value={this.props.match.params.id} name="meetingId" />
+                {/*title field*/}
+                <div className="form-group">
+                  <label>Meeting Name</label>
+                  <input name="title" className="form-control" type="text" placeholder="Type the meeting's name" required />
+                </div>
+                {/*closeout time field*/}
+                <div className="form-group">
+                  <label>Close-out Time</label>
+                  <input name="closeoutTime" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
+                </div>
 
+                {/*TODO*/}
+                <div className="form-group">
+                  <label>General Location Lat</label>
+                  <input name="generalLocationLatitude" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
+                </div>
+                <div className="form-group">
+                  <label>General Location Lon</label>
+                  <input name="generalLocationLongitude" className="form-control" type="text" placeholder="Type the time the meeting should lock in" required />
+                </div>
+                {/*radius field*/}
+                <div className="form-group">
+                  <label>Radius</label>
+                  <input name="radius" className="form-control" type="text" placeholder="Type the radius in meters the meeting should be within" required />
+                </div>
+                {/*duration field*/}
+                <div className="form-group">
+                  <label>Duration</label>
+                  <input name="duration" className="form-control" type="text" placeholder="Type the duration of the meeting in minutes" required />
+                </div>
                 {/*name field*/}
                 <div className="form-group">
-                  <label>Name</label>
+                  <label>Your Name</label>
                   <input name="name" className="form-control" type="text" placeholder="Type your name" required />
                 </div>
 
@@ -52,7 +79,7 @@ class Create extends Component {
 
                 {/*button to submit*/}
                 <div className="form-group" id="btn-container">
-                  <button type="submit" className="btn btn-primary" id="submit-btn" alt="button to submit event form">Submit Your Event</button>
+                  <button type="submit" className="btn btn-primary" id="submit-btn" alt="button to submit meeting form">Submit Your Meeting</button>
                 </div>
               </form>
             </div>
@@ -88,26 +115,26 @@ class Create extends Component {
 
   submit(e) {
     // Post creation data to server
-      $('#error-row').hide();
+    $('#error-row').hide();
 
-      e.preventDefault();
+    e.preventDefault();
 
-      let form = $('#creation-form');
+    let form = $('#creation-form');
 
-      $.ajax({
-          type: 'POST',
-          url: '/api/create',
-          data: form.serialize()
-      })
-      .done(function(data) {
-          $('#creation-form')[0].reset();
-          $('#title').hide();
-          $('#response-row').hide();
-          $('#confirmation-row').fadeIn();
-      })
-      .fail(function(jqXhr) {
-          $('#error-row').fadeIn();
-      });
+    $.ajax({
+        type: 'POST',
+        url: '/api/meeting/create',
+        data: form.serialize()
+    })
+    .done(function(data) {
+        $('#creation-form')[0].reset();
+        $('#title').hide();
+        $('#response-row').hide();
+        $('#confirmation-row').fadeIn();
+    })
+    .fail(function(jqXhr) {
+        $('#error-row').fadeIn();
+    });
   }
 }
 

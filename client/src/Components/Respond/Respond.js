@@ -69,28 +69,26 @@ class Respond extends Component {
 
   submit(e) {
     // Post to server
-      $('#error-row').hide();
+    $('#error-row').hide();
 
-      e.preventDefault();
+    e.preventDefault();
 
-      let form = $('#response-form');
+    let form = $('#response-form');
 
-      $.ajax({
-          type: 'POST',
-          url: '/api/response/create',
-          data: form.serialize()
-      })
-      .done(function(data) {
-          console.log(data);
-          if (data.success) {
-              $('#response-form')[0].reset();
-              $('#title').hide();
-              $('#response-row').hide();
-              $('#confirmation-row').fadeIn();
-          } else {
-              $('#error-row').fadeIn();
-          }
-      });
+    $.ajax({
+        type: 'POST',
+        url: '/api/response/create',
+        data: form.serialize()
+    })
+    .done(function(data) {
+      $('#response-form')[0].reset();
+      $('#title').hide();
+      $('#response-row').hide();
+      $('#confirmation-row').fadeIn();
+    })
+    .fail(function(jqXhr) {
+      $('#error-row').fadeIn();
+    });
   }
 }
 

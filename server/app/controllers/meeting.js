@@ -48,25 +48,23 @@ router.get('/:id', function (req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
-  if (typeof req.body.response.schedule === 'string') {
+  if (typeof req.body.schedule === 'string') {
     try {
-      JSON.parse(req.body.response.schedule);
+      JSON.parse(req.body.schedule);
     } catch (e) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false
       });
-      return;
     }
   }
 
-  if (typeof req.body.response.locationPreferences === 'string') {
+  if (typeof req.body.locationPreferences === 'string') {
     try {
-      JSON.parse(req.body.response.locationPreferences);
+      JSON.parse(req.body.locationPreferences);
     } catch (e) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false
       });
-      return;
     }
   }
   // Accept args in the form body
@@ -78,13 +76,13 @@ router.post('/create', function(req, res, next) {
     generalLocationLongitude: req.body.generalLocationLongitude,
     radius: req.body.radius,
     duration: req.body.duration,
-    invited: req.body.invited,
+    invited: [],
     creator: req.body.creator,
     responses: [{
-      name: req.body.response.name,
-      email: req.body.response.email,
-      schedule: req.body.response.schedule,
-      locationPreferences: req.body.response.locationPreferences
+      name: req.body.name,
+      email: req.body.email,
+      schedule: req.body.schedule,
+      locationPreferences: req.body.locationPreferences
     }]
   }, {
     include: [db.Meeting.Responses]
@@ -98,7 +96,6 @@ router.post('/create', function(req, res, next) {
       success: false
     });
   });
-
 });
 
 router.post('/invite', function(req, res, next) {
@@ -107,7 +104,13 @@ router.post('/invite', function(req, res, next) {
       id: req.body.id,
     },
   }).then(function(meeting) {
-    return sendInviteEmail(
+    req.body.emails.forEach(function(x) {
+      if (meeting.invited.indexOf(x) === -1) {
+        meeting.invited.push(x);
+      }
+    });
+
+    var emailPromise = sendInviteEmail(
       {
         to: req.body.emails.join(', ')
       },
@@ -116,6 +119,8 @@ router.post('/invite', function(req, res, next) {
         responseLink: 'http://ezpick.herokuapp.com/respond/' + meeting.id,
       }
     );
+
+    return Promise.all([emailPromise, meeting.save()];
   })
   .then(function() {
     res.json({
