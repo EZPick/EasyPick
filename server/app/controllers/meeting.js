@@ -107,10 +107,8 @@ router.post('/invite', function(req, res, next) {
       id: req.body.id,
     },
   }).then(function(meeting) {
-    // Make sure the model is being correctly found here
     return sendInviteEmail(
       {
-        // Not sure if it's correctly done here
         to: req.body.emails.join(', ')
       },
       {
