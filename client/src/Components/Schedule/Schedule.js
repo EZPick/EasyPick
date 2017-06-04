@@ -55,7 +55,7 @@ class Schedule extends Component {
     events.forEach(function(evt) {
       var dayIndex = evt.start.day();
       var minutesIn = (evt.start.hours() * 60) + evt.start.minutes();
-      var endMinutesIn = (evt.end.hours() * 60) + evt.end.minutes()
+      var endMinutesIn = (evt.end.hours() * 60) + evt.end.minutes();
       for (var i = minutesIn; i < endMinutesIn; i += 30) {
         result[dayIndex][i] = true;
       }
