@@ -102,29 +102,31 @@ router.post('/create', function(req, res, next) {
 });
 
 router.post('/invite', function(req, res, next) {
-  var Meeting;
   db.Meeting.findOne({
     where: {
-      id: req.query.id,
+      id: req.body.id,
     },
   }).then(function(meeting) {
     // Make sure the model is being correctly found here
-    Meeting = meeting;
-  }).catch(function(err) {
+    return sendInviteEmail(
+      {
+        // Not sure if it's correctly done here
+        to: req.body.emails.join(', ')
+      },
+      {
+        meetingTitle: meeting.title,
+        responseLink: 'http://ezpick.herokuapp.com/respond/' + meeting.id,
+      }
+    );
+  })
+  .then(function() {
     res.json({
-      success : false,
-      error : err,
+      success: true
+    });
+  })
+  .catch(function(err) {
+    res.status(500).json({
+      success: false
     });
   });
-
-  return sendInviteEmail(
-    {
-      // Not sure if it's correctly done here
-      to: res.map(function(x) { return x.email; }).join(', ')
-    },
-    {
-      meetingTitle: Meeting.title,
-      link: '/respond/' + Meeting.id,
-    }
-  );
 });
