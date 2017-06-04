@@ -27,51 +27,47 @@ module.exports = function (app) {
   app.use('/meeting', router);
 };
 
-router.get('/get', function (req, res, next) {
+router.get('/:id', function (req, res, next) {
   db.Meeting.findOne({
     where: {
-	  	id: req.query.id,
-		},
-		include: [{
-			model: db.Response,
-		}]
+      id: req.params.id,
+    },
+    include: [{
+      model: db.Response,
+    }]
   }).then(function(meeting) {
     res.json({
-	  	success : true,
-	  	data : meeting.dataValues,
-		});
+      success: true,
+      data: meeting.dataValues,
+    });
   }).catch(function(err) {
-    res.json({
-	  	success : false,
-	    error : err,
-		});
+    res.status(404).json({
+      success: false
+    });
   });
 });
 
 router.post('/create', function(req, res, next) {
   // Accept args in the form body
   db.Meeting.create({
-  // set Model values	
-
-  	title : req.body.title,
-		closeoutTime : req.body.closeoutTime,
-		generalLocationLatitude : req.body.generalLocationLatitude,
-		generalLocationLongitude : req.body.generalLocationLongitude,
-		radius : req.body.radius,
-		duration : req.body.duration,
-		invited : req.body.invited,
-		creator : req.body.creator,
-	
+    // set Model values
+    title : req.body.title,
+    closeoutTime : req.body.closeoutTime,
+    generalLocationLatitude : req.body.generalLocationLatitude,
+    generalLocationLongitude : req.body.generalLocationLongitude,
+    radius : req.body.radius,
+    duration : req.body.duration,
+    invited : req.body.invited,
+    creator : req.body.creator,
   }).then(function(result) {
     res.json({
-	  	success : true,
-	  	data : result.dataValues,
-		});
+      success: true,
+      data: result.dataValues,
+    });
   }).catch(function(err) {
-    res.json({
-	  	success : false,
-	  	error : err,
-		});
+    res.status(500).json({
+      success: false
+    });
   });
 
 });
@@ -80,16 +76,16 @@ router.post('/invite', function(req, res, next) {
   var Meeting;
   db.Meeting.findOne({
     where: {
-	  	id: req.query.id,
-		},
+      id: req.query.id,
+    },
   }).then(function(meeting) {
     // Make sure the model is being correctly found here
     Meeting = meeting;
   }).catch(function(err) {
     res.json({
-	  	success : false,
-	    error : err,
-		});
+      success : false,
+      error : err,
+    });
   });
 
   return sendInviteEmail(
