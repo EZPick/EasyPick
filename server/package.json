@@ -16,11 +16,16 @@
     "chai-http": "^3.0.0",
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
     "ejs": "^2.5.6",
+    "email-templates": "^2.6.0",
     "express": "^4.15.2",
     "glob": "^6.0.4",
+    "graphql-client": "^1.1.0",
     "method-override": "^2.3.8",
+    "moment": "^2.18.1",
     "morgan": "^1.8.1",
+    "nodemailer": "^2.7.0",
     "pg": "^6.2.2",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.30.4",
@@ -28,13 +33,21 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "debug": "^2.6.6",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-plumber": "^1.1.0",
     "mocha": "^3.3.0",
+    "mockery": "^2.0.0",
     "nyc": "^10.3.0",
+    "sinon": "^2.3.2",
     "supertest": "^2.0.1"
+  },
+  "nyc": {
+    "exclude": [
+      "app/lib/graphql-client.js"
+    ]
   }
 }
