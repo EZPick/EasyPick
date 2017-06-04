@@ -48,17 +48,46 @@ router.get('/:id', function (req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
+  if (typeof req.body.response.schedule === 'string') {
+    try {
+      JSON.parse(req.body.response.schedule);
+    } catch (e) {
+      res.status(500).json({
+        success: false
+      });
+      return;
+    }
+  }
+
+  if (typeof req.body.response.locationPreferences === 'string') {
+    try {
+      JSON.parse(req.body.response.locationPreferences);
+    } catch (e) {
+      res.status(500).json({
+        success: false
+      });
+      return;
+    }
+  }
   // Accept args in the form body
   db.Meeting.create({
     // set Model values
-    title : req.body.title,
-    closeoutTime : req.body.closeoutTime,
-    generalLocationLatitude : req.body.generalLocationLatitude,
-    generalLocationLongitude : req.body.generalLocationLongitude,
-    radius : req.body.radius,
-    duration : req.body.duration,
-    invited : req.body.invited,
-    creator : req.body.creator,
+    title: req.body.title,
+    closeoutTime: req.body.closeoutTime,
+    generalLocationLatitude: req.body.generalLocationLatitude,
+    generalLocationLongitude: req.body.generalLocationLongitude,
+    radius: req.body.radius,
+    duration: req.body.duration,
+    invited: req.body.invited,
+    creator: req.body.creator,
+    responses: [{
+      name: req.body.response.name,
+      email: req.body.response.email,
+      schedule: req.body.response.schedule,
+      locationPreferences: req.body.response.locationPreferences
+    }]
+  }, {
+    include: [db.Meeting.Responses]
   }).then(function(result) {
     res.json({
       success: true,

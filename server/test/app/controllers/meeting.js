@@ -34,6 +34,7 @@ describe('meeting controller', function() {
     var app;
 
     beforeEach(function() {
+      createStub.resetHistory();
       findOneStub.resetHistory();
 
       app = express();
@@ -62,7 +63,13 @@ describe('meeting controller', function() {
             radius: 1000,
             duration: 60,
             invited: ['email1', 'email2'],
-            creator: 'me'
+            creator: 'me',
+            response: {
+              name: 'Zeb',
+              email: 'email3',
+              schedule: [{300: true, 1200: true}, {}, {}, {1200: true, 1230: true}],
+              locationPreferences: {wifi: true}
+            }
           })
           .end(function(err, res) {
             expect(err).to.not.exist;
@@ -101,12 +108,18 @@ describe('meeting controller', function() {
             radius: 1000,
             duration: 60,
             invited: ['email1', 'email2'],
-            creator: 'me'
+            creator: 'me',
+            response: {
+              name: 'Zeb',
+              email: 'email3',
+              schedule: [{300: true, 1200: true}, {}, {}, {1200: true, 1230: true}],
+              locationPreferences: {wifi: true}
+            }
           })
           .end(function(err, res) {
             expect(err).to.exist;
             expect(res).to.have.status(500);
-            expect(createStub.calledOnce).to.equal(false);
+            expect(createStub.calledOnce).to.equal(true);
             done();
           });
       });
