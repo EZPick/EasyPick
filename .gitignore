@@ -8,3 +8,4 @@ client/build
 *.swo
 **/.env
 server/config/config.js
+server/seed.js
