@@ -82,15 +82,12 @@ class Respond extends Component {
       })
       .done(function(data) {
           console.log(data);
-          if (data.success)
-          {
+          if (data.success) {
               $('#response-form')[0].reset();
               $('#title').hide();
               $('#response-row').hide();
               $('#confirmation-row').fadeIn();
-          }
-          else
-          {
+          } else {
               $('#error-row').fadeIn();
           }
       });
