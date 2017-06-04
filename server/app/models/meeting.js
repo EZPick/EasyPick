@@ -12,8 +12,8 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function (models) {
-        Meeting.hasOne(models.Decision);
-        Meeting.hasMany(models.Response);
+        Meeting.Decision = Meeting.hasOne(models.Decision);
+        Meeting.Responses = Meeting.hasMany(models.Response);
       }
     }
   });
