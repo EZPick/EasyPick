@@ -131,7 +131,8 @@ router.post('/invite', function(req, res, next) {
   })
   .catch(function(err) {
     res.status(500).json({
-      success: false
+      success: false,
+      err: err
     });
   });
 });
