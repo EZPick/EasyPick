@@ -24,30 +24,28 @@ class Location extends Component {
     return (
       <div ref="form-group">
         <label>Location Preferences</label>
-        <form ref="form" onSubmit={this.handleSubmit}>
-          <table>
-            <tbody>
-              <tr>
-                <label className="form-item">
-                  Wifi
-                  <input id="wifi" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
-                </label>
-                <label className="form-item">
-                  Privacy
-                  <input id="privacy" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
-                </label>
-                <label className="form-item">
-                  Quiet
-                  <input id="quiet" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
-                </label>
-                <label className="form-item">
-                  Food and Drink
-                  <input id="foodAndDrink" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
-                </label>
-              </tr>
-            </tbody>
-          </table>
-        </form>
+        <table>
+          <tbody>
+            <tr>
+              <label className="form-item">
+                Wifi
+                <input id="wifi" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+              </label>
+              <label className="form-item">
+                Privacy
+                <input id="privacy" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+              </label>
+              <label className="form-item">
+                Quiet
+                <input id="quiet" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+              </label>
+              <label className="form-item">
+                Food and Drink
+                <input id="foodAndDrink" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+              </label>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }
