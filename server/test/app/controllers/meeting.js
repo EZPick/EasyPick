@@ -64,12 +64,10 @@ describe('meeting controller', function() {
             duration: 60,
             invited: ['email1', 'email2'],
             creator: 'me',
-            response: {
-              name: 'Zeb',
-              email: 'email3',
-              schedule: [{300: true, 1200: true}, {}, {}, {1200: true, 1230: true}],
-              locationPreferences: {wifi: true}
-            }
+            name: 'Zeb',
+            email: 'email3',
+            schedule: [{300: true, 1200: true}, {}, {}, {1200: true, 1230: true}],
+            locationPreferences: {wifi: true}
           })
           .end(function(err, res) {
             expect(err).to.not.exist;
@@ -79,22 +77,7 @@ describe('meeting controller', function() {
           });
       });
 
-      it('should 500 and not call db with missing params', function(done) {
-        createStub.returns(
-          Promise.reject()
-        );
-        chai.request(app)
-          .post('/meeting/create')
-          // Pass parameters here
-          .end(function(err, res) {
-            expect(err).to.exist;
-            expect(res).to.have.status(500);
-            expect(createStub.calledOnce).to.equal(false);
-            done();
-          });
-      });
-
-      it('should 500 and call db with bad params', function(done) {
+      it('should 500 with bad params', function(done) {
         createStub.returns(
           Promise.reject()
         );
@@ -109,12 +92,10 @@ describe('meeting controller', function() {
             duration: 60,
             invited: ['email1', 'email2'],
             creator: 'me',
-            response: {
-              name: 'Zeb',
-              email: 'email3',
-              schedule: [{300: true, 1200: true}, {}, {}, {1200: true, 1230: true}],
-              locationPreferences: {wifi: true}
-            }
+            name: 'Zeb',
+            email: 'email3',
+            schedule: [{300: true, 1200: true}, {}, {}, {1200: true, 1230: true}],
+            locationPreferences: {wifi: true}
           })
           .end(function(err, res) {
             expect(err).to.exist;

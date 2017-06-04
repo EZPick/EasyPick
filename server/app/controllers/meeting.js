@@ -120,7 +120,7 @@ router.post('/invite', function(req, res, next) {
       }
     );
 
-    return Promise.all([emailPromise, meeting.save()];
+    return Promise.all([emailPromise, meeting.save()]);
   })
   .then(function() {
     res.json({
