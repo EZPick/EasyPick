@@ -16,7 +16,7 @@ var transporter = nodemailer.createTransport({
 
 var sendInviteEmail = transporter
   .templateSender(
-    new EmailTemplate('./app/email-templates/invite'),
+    new EmailTemplate(process.env.NODE_ENV == 'production' ? './server/app/email-templates/invite' : './app/email-templates/invite'),
     {
       subject: 'You have been invited to an EZPick meeting.',
       from: process.env.EMAILS_FROM
