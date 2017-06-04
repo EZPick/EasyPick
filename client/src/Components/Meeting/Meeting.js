@@ -8,7 +8,7 @@ class Meeting extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {data: {Responses: [], Decision: null}};
+    this.state = {data: {Responses: [], invited: [], Decision: null}};
     $.ajax({
           url: '/api/meeting/' + this.props.match.params.id,
           dataType: 'json',
@@ -21,7 +21,6 @@ class Meeting extends Component {
               return err;
           }
      });
-
   }
 
   formatTime(dayIndex, minutesIn) {
@@ -39,7 +38,8 @@ class Meeting extends Component {
     return (
       <div id='tableArea'>
         <h1>{meeting.title}</h1>
-        <table>
+        <h2>Responses</h2>
+        <table className="table">
             <tbody>
               <tr>
                 <th>Name</th>
@@ -49,6 +49,21 @@ class Meeting extends Component {
                 return (<tr key={responder['email']}>
                          <td>{responder['name']}</td>
                          <td>{responder['email']}</td>
+                       </tr>);
+              })}
+            </tbody>
+        </table>
+        <h2>People Invited</h2>
+        <table className="table">
+            <tbody>
+              <tr>
+                <th>Email</th>
+              </tr>
+              {meeting.invited.filter(function(x) {
+                return meeting.Responses.map(a => a.email).indexOf(x) === -1;
+              }).map(function(invite) {
+                return (<tr key={invite}>
+                         <td>{invite}</td>
                        </tr>);
               })}
             </tbody>
