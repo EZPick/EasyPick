@@ -22,21 +22,31 @@ class Location extends Component {
 
   render() {
     return (
-      <div ref="outputDiv">
+      <div ref="form-group">
+        <label>Location Preferences</label>
         <form ref="form" onSubmit={this.handleSubmit}>
-          <label className="item">
-            <input id="wifi" type="checkbox" onChange={this.handleChange} /> Wifi
-          </label>
-          <label className="item">
-            <input id="privacy" type="checkbox" onChange={this.handleChange} /> Privacy
-          </label>
-          <label className="item">
-            <input id="quiet" type="checkbox" onChange={this.handleChange} /> Quiet
-          </label>
-          <label className="item">
-            <input id="foodAndDrink" type="checkbox" onChange={this.handleChange} /> Food and Drink
-          </label>
-          <input type="submit" value="Submit" />
+          <table>
+            <tbody>
+              <tr>
+                <label className="form-item">
+                  Wifi
+                  <input id="wifi" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+                </label>
+                <label className="form-item">
+                  Privacy
+                  <input id="privacy" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+                </label>
+                <label className="form-item">
+                  Quiet
+                  <input id="quiet" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+                </label>
+                <label className="form-item">
+                  Food and Drink
+                  <input id="foodAndDrink" type="checkbox" className="locationCheckBox" onChange={this.handleChange} />
+                </label>
+              </tr>
+            </tbody>
+          </table>
         </form>
       </div>
     );
