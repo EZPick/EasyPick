@@ -51,6 +51,10 @@ class Location extends Component {
       </div>
     );
   }
+
+  value() {
+
+  }
 }
 
 export default Location;
