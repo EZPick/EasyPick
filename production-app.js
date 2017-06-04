@@ -31,3 +31,26 @@ db.sequelize
   });
 
 module.exports = require('./server/config/express')(app, config);
+
+var schedule = require('node-schedule');
+var decisionMaker = require('./server/app/lib/decisionmaker');
+var ONE_HOUR = 60 * 60 * 1000;
+
+schedule.scheduleJob('0 * * * *', function() {
+  var now = new Date();
+  db.Meeting.all({
+    where: {
+      closeoutTime: {
+        gt: new Date(now.getTime() - ONE_HOUR)
+      }
+    }
+  }).then(function(meetings) {
+    var promises = [];
+    meetings.forEach(function(m) {
+      promises.push(decisionMaker.makeDecisionAndSendEmails(m));
+    });
+    return Promise.all(promises);
+  }).then(function() {
+    console.log('all done making decisions!');
+  });
+});
