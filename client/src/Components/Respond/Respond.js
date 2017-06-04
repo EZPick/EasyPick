@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import './Respond.css';
+import dateTimePicker from 'eonasdan-bootstrap-datetimepicker';
+import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
-import $ from 'jquery';
+import jQuery from 'jquery';
+var $ = window.jQuery;
+
+$ = $ || jQuery;
+
+$.fn.locationpicker = $.fn.locationpicker || function() {};
 
 function getFormData($form){
     var unindexed_array = $form.serializeArray();
@@ -16,6 +23,34 @@ function getFormData($form){
 }
 
 class Respond extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {data: {}};
+    $.ajax({
+          url: '/api/meeting/' + this.props.match.params.id,
+          dataType: 'json',
+          cacheL: false,
+          success: data => {
+            this.setState({data: data.data });
+          },
+          error: function(xhr, status, err) {
+              console.log("SOI SOI SOI SOI ERROR");
+              return err;
+          }
+     });
+  }
+
+  componentDidUpdate() {
+    $('#location-display').locationpicker({
+      radius: this.state.data.radius,
+      location: {
+        latitude: this.state.data.generalLocationLatitude,
+        longitude: this.state.data.generalLocationLongitude
+      },
+      draggable: false
+    });
+  }
+
   render() {
     return (
       <div>
@@ -23,9 +58,13 @@ class Respond extends Component {
             <div className="row">
                 <div className="col-sm-3"></div>
                 <div className="col-sm-6">
-                    <h1 id="title">Respond</h1>
+                    <h1 id="title">Respond {this.state.data.title && ('to ' + this.state.data.title)}</h1>
                 </div>
                 <div className="col-sm-3"></div>
+            </div>
+            <div className="row">
+              {!this.state.data.generalLocationLatitude && <p>Loading map...</p>}
+              {this.state.data.generalLocationLatitude && <div id="location-display"></div>}
             </div>
             <div className="row" id="error-row">
                 <div className="col-sm-3"></div>
