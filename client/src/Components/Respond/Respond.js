@@ -27,6 +27,15 @@ class Respond extends Component {
                 </div>
                 <div className="col-sm-3"></div>
             </div>
+            <div className="row" id="error-row">
+                <div className="col-sm-3"></div>
+                <div className="col-sm-6">
+                    <div className="alert alert-danger fade in">
+                        <strong>Submission failed!</strong> Please try again
+                    </div>
+                </div>
+                <div className="col-sm-3"></div>
+            </div>
             <div className="row" id="response-row">
                 <div className="col-sm-3"></div>
                 <div className="col-sm-6">
@@ -64,15 +73,6 @@ class Respond extends Component {
                 </div>
                 <div className="col-sm-3"></div>
             </div>
-            <div className="row" id="error-row">
-                <div className="col-sm-3"></div>
-                <div className="col-sm-6">
-                    <div className="alert alert-danger fade in">
-                        <strong>Submission failed!</strong> Please try again
-                    </div>
-                </div>
-                <div className="col-sm-3"></div>
-            </div>
         </div>
       </div>
     );
@@ -94,13 +94,15 @@ class Respond extends Component {
           data: $.param(data)
       })
       .done(function(data) {
-          $('#response-form')[0].reset();
-          $('#title').hide();
-          $('#response-row').hide();
-          $('#confirmation-row').fadeIn();
-      })
-      .fail(function(jqXhr) {
-          $('#error-row').fadeIn();
+          console.log(data);
+          if (data.success) {
+              $('#response-form')[0].reset();
+              $('#title').hide();
+              $('#response-row').hide();
+              $('#confirmation-row').fadeIn();
+          } else {
+              $('#error-row').fadeIn();
+          }
       });
   }
 }
