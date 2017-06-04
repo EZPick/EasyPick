@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import './Create.css';
 import Schedule from '../Schedule/Schedule';
 import Location from '../Location/Location';
-
+import jQuery from 'jquery';
 var $ = window.jQuery;
+
+$ = $ || jQuery;
+
+$.fn.locationpicker = $.fn.locationpicker || function() {};
 
 class Create extends Component {
   componentDidMount() {
