@@ -84,13 +84,11 @@ class Create extends Component {
 
                 {/*location field*/}
                 <div className="form-group">
-                  <label>Location</label>
                   <Location />
                 </div>
 
                 {/*schedule field*/}
                 <div className="form-group">
-                  <label>Schedule</label>
                   <Schedule />
                 </div>
 
