@@ -3,5 +3,9 @@ client/build
 **/coverage
 **/npm-debug.log
 **/.nyc_output
+*~
+*.swp
+*.swo
+**/.env
 server/config/config.js
 server/seed.js

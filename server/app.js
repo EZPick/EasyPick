@@ -2,6 +2,8 @@ var express = require('express'),
   config = require('./config/config'),
   db = require('./app/models');
 
+require('dotenv').config();
+
 var app = express();
 
 module.exports = require('./config/express')(app, config);
