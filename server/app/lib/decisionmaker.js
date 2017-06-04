@@ -207,7 +207,7 @@ function determineCategory(responses) {
 
   Object.keys(attributeCounts).forEach(function(attr) {
     responses.forEach(function(response) {
-      if (response[attr]) {
+      if (response[attr].toString() === 'true') {
         attributeCounts[attr]++;
       }
     });

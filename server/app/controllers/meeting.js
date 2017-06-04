@@ -79,7 +79,7 @@ router.post('/create', function(req, res, next) {
     radius: req.body.radius,
     duration: req.body.duration,
     invited: [],
-    creator: req.body.creator,
+    creator: req.body.email,
     Responses: [{
       name: req.body.name,
       email: req.body.email,
