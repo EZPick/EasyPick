@@ -10,6 +10,7 @@ class Schedule extends Component {
       defaultView: 'agendaWeek',
       allDaySlot: false,
       selectable: true,
+      height: 'auto',
       header: {
         left: '',
         center: '',
