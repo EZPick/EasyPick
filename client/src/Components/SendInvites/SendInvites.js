@@ -17,7 +17,7 @@ class SendInvites extends Component {
   render() {
     return (
       <div>
-        <p>Want to invite people to respond to your meeting? Enter their emails below.</p>
+        <p>Or we can invite people by email. Just enter their emails below.</p>
         <form id="invite-form" onSubmit={this.submit.bind(this)}>
           <input type="hidden" name="id" value={this.props.meetingId} />
           <div className="form-group">

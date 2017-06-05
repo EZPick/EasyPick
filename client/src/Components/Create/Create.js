@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './Create.css';
 import dateTimePicker from 'eonasdan-bootstrap-datetimepicker';
 import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
@@ -137,6 +138,9 @@ class Create extends Component {
             </div>
             <div className="col-sm-3"></div>
           </div>
+          {this.state.meetingId &&
+            <p>Here's a link you can send out: <Link to={'/meeting/' + this.state.meetingId}>{'https://ezpick.herokuapp.com/meeting/' + this.state.meetingId}</Link></p>
+          }
           {this.state.meetingId && <SendInvites meetingId={this.state.meetingId}/>}
           <div className="row" id="error-row">
             <div className="col-sm-3"></div>
