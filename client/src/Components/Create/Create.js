@@ -84,7 +84,7 @@ class Create extends Component {
                 {/*radius field*/}
                 <div className="form-group">
                   <label>Radius</label>
-                  <input name="radius" className="form-control" type="number" placeholder="Type the radius in meters the meeting should be within" required />
+                  <input name="radius" className="form-control" type="number" min="1" placeholder="Type the radius in meters the meeting should be within" required />
                 </div>
 
                 <input type="hidden" name="generalLocationLatitude" />
