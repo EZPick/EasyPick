@@ -3,27 +3,30 @@ var express = require('express'),
   db = require('../models');
 
 module.exports = function (app) {
-  app.use('/api/response/', router);
+  app.use('/response', router);
 };
 
 router.post('/create', function (req, res, next) {
-  try {
-    JSON.parse(req.body.schedule);
-  } catch (e) {
-    res.status(500).json({
-      success: false
-    });
-    return;
+  if (typeof req.body.schedule === 'string') {
+    try {
+      JSON.parse(req.body.schedule);
+    } catch (e) {
+      return res.status(500).json({
+        success: false
+      });
+    }
   }
 
-  try {
-    JSON.parse(req.body.locationPreferences)
-  } catch (e) {
-    res.status(500).json({
-      success: false
-    });
-    return;
+  if (typeof req.body.locationPreferences === 'string') {
+    try {
+      JSON.parse(req.body.locationPreferences);
+    } catch (e) {
+      return res.status(500).json({
+        success: false
+      });
+    }
   }
+
   db.Response.create({
     name: req.body.name,
     email: req.body.email,
