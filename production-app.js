@@ -38,7 +38,7 @@ var ONE_HOUR = 60 * 60 * 1000;
 
 schedule.scheduleJob('0 * * * *', function() {
   var now = new Date();
-  db.Meeting.all({
+  db.Meeting.findAll({
     where: {
       closeoutTime: {
         gt: new Date(now.getTime() - ONE_HOUR)

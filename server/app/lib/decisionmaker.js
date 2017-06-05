@@ -282,7 +282,7 @@ function determinePlace(responses, time, meeting) {
 
 module.exports = {
   makeDecisionAndSendEmails: function(meeting) {
-    module.exports.makeDecision(meeting)
+    return module.exports.makeDecision(meeting)
       .then(function([responses, decision]) {
         module.exports.sendEmailTo(responses, decision);
       });
