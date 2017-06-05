@@ -125,7 +125,7 @@ class Respond extends Component {
 
     var data = getFormData($('#response-form'));
     data.schedule = this.refs.schedule.value();
-    data.location_preferences = this.refs.location.value();
+    data.locationPreferences = this.refs.location.value();
 
     $.ajax({
         type: 'POST',
@@ -134,7 +134,7 @@ class Respond extends Component {
     })
     .done(function(data) {
       $('#response-form')[0].reset();
-      $('#title').hide();
+      $('#title, #location-display').hide();
       $('#response-row').hide();
       $('#confirmation-row').fadeIn();
     })

@@ -44,7 +44,7 @@ describe('response routes', function() {
 
     it('should succeed when everything is supplied', function(done) {
       chai.request(app)
-        .post('/api/response/create')
+        .post('/response/create')
         .send({
           name: 'Meeting Name',
           email: 'fake@email.com',
@@ -62,7 +62,7 @@ describe('response routes', function() {
 
     it('should fail when schedule is invalid', function(done) {
       chai.request(app)
-        .post('/api/response/create')
+        .post('/response/create')
         .send({
           name: 'Meeting Name',
           email: 'fake@email.com',
@@ -80,7 +80,7 @@ describe('response routes', function() {
 
     it('should fail when locationPreferences is invalid', function(done) {
       chai.request(app)
-        .post('/api/response/create')
+        .post('/response/create')
         .send({
           name: 'Meeting Name',
           email: 'fake@email.com',
