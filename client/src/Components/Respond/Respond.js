@@ -47,7 +47,8 @@ class Respond extends Component {
         latitude: this.state.data.generalLocationLatitude,
         longitude: this.state.data.generalLocationLongitude
       },
-      draggable: false
+      draggable: false,
+      markerDraggable: false
     });
   }
 
