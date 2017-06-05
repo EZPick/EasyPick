@@ -95,7 +95,7 @@ class Create extends Component {
                 {/*duration field*/}
                 <div className="form-group">
                   <label>Duration</label>
-                  <input name="duration" className="form-control" type="number" step="30" min="0" max="600" placeholder="Type the duration of the meeting in minutes" required />
+                  <input name="duration" className="form-control" type="number" step="30" min="0" max="600" placeholder="Type the duration of the meeting in minutes (must be a multiple of 30)" required />
                 </div>
                 {/*name field*/}
                 <div className="form-group">
