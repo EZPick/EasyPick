@@ -116,7 +116,7 @@ function determineTime(responses, meeting) {
           }
         }
 
-        if (day.hasOwnProperty(slot) && day[slot] === true && isFreeForDuration) {
+        if (day.hasOwnProperty(slot) && day[slot].toString() === 'true' && isFreeForDuration) {
           // This person is available
 
           // Set up the day and slot, if they haven't been already
