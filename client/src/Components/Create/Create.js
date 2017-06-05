@@ -106,7 +106,7 @@ class Create extends Component {
                 {/*email field*/}
                 <div className="form-group">
                   <label>Email</label>
-                  <input name="email" className="form-control" type="text" placeholder="Type your email" required />
+                  <input name="email" className="form-control" type="email" placeholder="Type your email" required />
                 </div>
 
                 {/*location field*/}
