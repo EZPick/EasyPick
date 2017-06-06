@@ -180,7 +180,7 @@ function determineTime(responses, meeting) {
       .map(function(x) { return x.buffer; })
       .reduce(function(acc, item) {
         return acc + item;
-      });
+      }, 0);
 
     if (totalBuffer > maxTotalBuffer) {
       // New leader
