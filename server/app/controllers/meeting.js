@@ -118,7 +118,7 @@ router.post('/invite', function(req, res, next) {
       },
       {
         meetingTitle: meeting.title,
-        responseLink: 'http://ezpick.herokuapp.com/respond/' + meeting.id,
+        responseLink: 'http://ezpick.herokuapp.com/meeting/' + meeting.id,
       }
     );
 

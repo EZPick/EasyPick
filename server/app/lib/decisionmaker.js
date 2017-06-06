@@ -116,7 +116,7 @@ function determineTime(responses, meeting) {
           }
         }
 
-        if (day.hasOwnProperty(slot) && day[slot] === true && isFreeForDuration) {
+        if (day.hasOwnProperty(slot) && day[slot].toString() === 'true' && isFreeForDuration) {
           // This person is available
 
           // Set up the day and slot, if they haven't been already
@@ -282,7 +282,7 @@ function determinePlace(responses, time, meeting) {
 
 module.exports = {
   makeDecisionAndSendEmails: function(meeting) {
-    module.exports.makeDecision(meeting)
+    return module.exports.makeDecision(meeting)
       .then(function([responses, decision]) {
         module.exports.sendEmailTo(responses, decision);
       });
