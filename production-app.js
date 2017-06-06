@@ -34,6 +34,7 @@ module.exports = require('./server/config/express')(app, config);
 
 var schedule = require('node-schedule');
 var decisionMaker = require('./server/app/lib/decisionmaker');
+var Sequelize = require('./server/node_modules/sequelize');
 var ONE_HOUR = 60 * 60 * 1000;
 
 schedule.scheduleJob('0 * * * *', function() {
