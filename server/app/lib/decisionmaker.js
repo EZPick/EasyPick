@@ -116,7 +116,7 @@ function determineTime(responses, meeting) {
           }
         }
 
-        if (day.hasOwnProperty(slot) && day[slot] === true && isFreeForDuration) {
+        if (day.hasOwnProperty(slot) && day[slot].toString() === 'true' && isFreeForDuration) {
           // This person is available
 
           // Set up the day and slot, if they haven't been already
@@ -158,6 +158,19 @@ function determineTime(responses, meeting) {
     }
   });
 
+  if (highAttendanceTimes.length === 0) {
+    // When nobody is available at all (at any time--everyone filled out blank
+    // schedules), we just give them a default time: wednesday at noon. Hard to
+    // know what to do in this situation if you don't do this.
+    // NOTE: Our frontend does not allow posting an empty schedule anymore. This
+    // deals with legacy meetings and other stuff that snuck into the database.
+    highAttendanceTimes = [{
+      day: 3,
+      minutesIn: 720,
+      canMake: []
+    }];
+  }
+
   var maxTotalBuffer = 0;
   var highBufferTimes = [];
 
@@ -167,7 +180,7 @@ function determineTime(responses, meeting) {
       .map(function(x) { return x.buffer; })
       .reduce(function(acc, item) {
         return acc + item;
-      });
+      }, 0);
 
     if (totalBuffer > maxTotalBuffer) {
       // New leader
@@ -282,7 +295,7 @@ function determinePlace(responses, time, meeting) {
 
 module.exports = {
   makeDecisionAndSendEmails: function(meeting) {
-    module.exports.makeDecision(meeting)
+    return module.exports.makeDecision(meeting)
       .then(function([responses, decision]) {
         module.exports.sendEmailTo(responses, decision);
       });

@@ -129,9 +129,9 @@ class Respond extends Component {
     data.locationPreferences = this.refs.location.value();
 
     $.ajax({
-        type: 'POST',
-        url: '/api/response/create',
-        data: $.param(data)
+      type: 'POST',
+      url: '/api/response/create',
+      data: $.param(data)
     })
     .done(function(data) {
       $('#response-form')[0].reset();

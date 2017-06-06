@@ -34,23 +34,31 @@ module.exports = require('./server/config/express')(app, config);
 
 var schedule = require('node-schedule');
 var decisionMaker = require('./server/app/lib/decisionmaker');
+var Sequelize = require('./server/node_modules/sequelize');
 var ONE_HOUR = 60 * 60 * 1000;
 
 schedule.scheduleJob('0 * * * *', function() {
   var now = new Date();
-  db.Meeting.all({
+  db.Meeting.findAll({
     where: {
-      closeoutTime: {
-        gt: new Date(now.getTime() - ONE_HOUR)
-      }
-    }
-  }).then(function(meetings) {
-    var promises = [];
-    meetings.forEach(function(m) {
-      promises.push(decisionMaker.makeDecisionAndSendEmails(m));
+      $and: [
+        {
+          closeoutTime: {
+            $lte: now
+          }
+        },
+        Sequelize.literal('"Decision"."MeetingId" IS null')
+      ]
+    },
+    include: [db.Decision]
+  })
+    .then(function(meetings) {
+      var promises = [];
+      meetings.forEach(function(m) {
+        promises.push(decisionMaker.makeDecisionAndSendEmails(m));
+      });
+      return Promise.all(promises);
+    }).then(function() {
+      console.log('all done making decisions!');
     });
-    return Promise.all(promises);
-  }).then(function() {
-    console.log('all done making decisions!');
-  });
 });
