@@ -32,33 +32,26 @@ class Create extends Component {
   }
 
   componentDidMount() {
+    $('#location-field').locationpicker({
+      radius: 300,
+      location: {
+        latitude: 47.6062,
+        longitude: -122.3321
+      },
+      inputBinding: {
+        radiusInput: $('[name=radius]'),
+        latitudeInput: $('[name=generalLocationLatitude]'),
+        longitudeInput: $('[name=generalLocationLongitude]')
+      }
+    });
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-        $('#location-field').locationpicker({
-          radius: 300,
-          location: {
+        $('#location-field').locationpicker('location',
+          {
+            radius: 300,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
-          },
-          inputBinding: {
-            radiusInput: $('[name=radius]'),
-            latitudeInput: $('[name=generalLocationLatitude]'),
-            longitudeInput: $('[name=generalLocationLongitude]')
-          }
-        });
-      });
-    } else {
-      $('#location-field').locationpicker({
-        radius: 300,
-        location: {
-          latitude: 47.6062,
-          longitude: -122.3321
-        },
-        inputBinding: {
-          radiusInput: $('[name=radius]'),
-          latitudeInput: $('[name=generalLocationLatitude]'),
-          longitudeInput: $('[name=generalLocationLongitude]')
-        }
+          });
       });
     }
 
