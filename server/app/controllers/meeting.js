@@ -23,6 +23,15 @@ var sendInviteEmail = transporter
     }
   );
 
+var sendConfirmEmail = transporter
+  .templateSender(
+    new EmailTemplate(process.env.NODE_ENV == 'production' ? './server/app/email-templates/confirmation' : './app/email-templates/confirmation'),
+    {
+      subject: 'Your EZPick meeting has been created',
+      from: process.env.EMAILS_FROM
+    }
+  );
+
 module.exports = function (app) {
   app.use('/meeting', router);
 };
@@ -90,15 +99,30 @@ router.post('/create', function(req, res, next) {
     }]
   }, {
     include: [{association: db.Meeting.Responses}]
-  }).then(function(result) {
-    res.json({
-      success: true,
-      data: result.dataValues,
-    });
-  }).catch(function(err) {
-    res.status(500).json({
-      success: false
-    });
+  })
+    .then(function(meeting) {
+      var emailPromise = sendConfirmEmail(
+        {
+          to: req.body.email
+        },
+        {
+          meetingTitle: meeting.dataValues.title,
+          meetingLink: 'http://ezpick.herokuapp.com/meeting/' + meeting.dataValues.id
+        }
+      );
+
+      return Promise.all([emailPromise, Promise.resolve(meeting)]);
+    })
+    .then(function([email, meeting]) {
+      res.json({
+        success: true,
+        data: meeting.dataValues
+      });
+    })
+    .catch(function(err) {
+      res.status(500).json({
+        success: false
+      });
   });
 });
 

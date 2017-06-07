@@ -12,6 +12,7 @@ var mockery = require('mockery');
 var sinon = require('sinon');
 var findOneStub = sinon.stub();
 var createStub = sinon.stub();
+var sendMailStub = sinon.stub().returns(Promise.resolve());
 
 mockery.registerMock('../models', {
   Meeting: {
@@ -19,10 +20,23 @@ mockery.registerMock('../models', {
     create: createStub
   }
 });
+
+mockery.registerMock('nodemailer', {
+  createTransport: function() {
+    return {
+      templateSender: function() {
+        return sendMailStub;
+      }
+    };
+  }
+});
+
 mockery.enable({
   warnOnUnregistered: false
 });
+
 var meeting = require('../../../app/controllers/meeting');
+
 mockery.disable();
 
 describe('meeting controller', function() {
@@ -36,6 +50,7 @@ describe('meeting controller', function() {
     beforeEach(function() {
       createStub.resetHistory();
       findOneStub.resetHistory();
+      sendMailStub.resetHistory();
 
       app = express();
       app.use(bodyParser.json());
@@ -53,6 +68,7 @@ describe('meeting controller', function() {
             }
           })
         );
+        sendMailStub.returns(Promise.resolve(null));
         chai.request(app)
           .post('/meeting/create')
           .send({
@@ -73,6 +89,7 @@ describe('meeting controller', function() {
             expect(err).to.not.exist;
             expect(res).to.have.status(200);
             expect(createStub.calledOnce).to.equal(true);
+            expect(sendMailStub.calledOnce).to.equal(true);
             done();
           });
       });
@@ -81,6 +98,7 @@ describe('meeting controller', function() {
         createStub.returns(
           Promise.reject()
         );
+        sendMailStub.returns(Promise.resolve(null));
         chai.request(app)
           .post('/meeting/create')
           .send({
@@ -101,6 +119,7 @@ describe('meeting controller', function() {
             expect(err).to.exist;
             expect(res).to.have.status(500);
             expect(createStub.calledOnce).to.equal(true);
+            expect(sendMailStub.calledOnce).to.equal(false);
             done();
           });
       });
