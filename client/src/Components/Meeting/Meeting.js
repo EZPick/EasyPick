@@ -10,7 +10,7 @@ class Meeting extends Component {
     super(props);
     this.state = {data: {Responses: [], invited: [], Decision: null}};
     $.ajax({
-          url: '/api/meeting/' + this.props.match.params.id,
+          url: '/api/meeting/' + this.props.match.params.code,
           dataType: 'json',
           cacheL: false,
           success: data => {
@@ -69,7 +69,7 @@ class Meeting extends Component {
             </tbody>
         </table>
         {decision === null &&
-          <Link to={'/respond/' + this.props.match.params.id }>Respond to Meeting Here</Link>}
+          <Link to={'/respond/' + this.props.match.params.code }>Respond to Meeting Here</Link>}
         {decision !== null &&
           <p>
             This meeting has been scheduled for {decision.nameOfLocation} ({decision.address}) at {this.formatTime(decision.dayOfWeek, decision.minutesIn)}.

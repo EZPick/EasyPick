@@ -27,12 +27,18 @@ router.post('/create', function (req, res, next) {
     }
   }
 
-  db.Response.create({
-    name: req.body.name,
-    email: req.body.email,
-    schedule: req.body.schedule,
-    locationPreferences: req.body.locationPreferences,
-    MeetingId: req.body.meetingId
+  db.Meeting.findOne({
+    where: {
+      code: req.body.meetingCode,
+    }
+  }).then(function(meeting) {
+    return db.Response.create({
+      name: req.body.name,
+      email: req.body.email,
+      schedule: req.body.schedule,
+      locationPreferences: req.body.locationPreferences,
+      MeetingId: meeting.id
+    })
   }).then(function(result) {
     res.json({
       success: true
