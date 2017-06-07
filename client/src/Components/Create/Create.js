@@ -44,6 +44,16 @@ class Create extends Component {
         longitudeInput: $('[name=generalLocationLongitude]')
       }
     });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        $('#location-field').locationpicker('location',
+          {
+            radius: 300,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+      });
+    }
 
     (dateTimePicker.bind($('#datetimepicker')))();
   }
