@@ -108,7 +108,7 @@ router.post('/invite', function(req, res, next) {
       id: req.body.id,
     },
   }).then(function(meeting) {
-    var newEmails = new Array();
+    var newEmails = [];
     req.body.emails.forEach(function(x) {
       if (meeting.invited.indexOf(x) === -1) {
         newEmails.push(x);
@@ -124,8 +124,7 @@ router.post('/invite', function(req, res, next) {
         responseLink: 'http://ezpick.herokuapp.com/meeting/' + meeting.id,
       }
     );
-    newEmails = meeting.invited.concat(newEmails);
-    meeting.invited = newEmails;
+    meeting.invited = meeting.invited.concat(newEmails);
     return Promise.all([emailPromise, meeting.save()]);
   })
   .then(function() {
