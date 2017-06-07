@@ -2,6 +2,10 @@ module.exports = function (sequelize, DataTypes) {
 
   var Meeting = sequelize.define('Meeting', {
     title: { type: DataTypes.STRING, allowNull: false },
+    // In practice, we never want to keep a meeting with no code.
+    // But in order to give it a unique id (which is used as the end of the
+    // code to guarantee uniqueness), we need to make it without one first.
+    code: { type: DataTypes.STRING, allowNull: true },
     closeoutTime: { type: DataTypes.DATE, allowNull: false},
     generalLocationLatitude: { type: DataTypes.DOUBLE, defaultValue: null, validate: { min: -90, max: 90 }}, // Location latitude - general meeting area
     generalLocationLongitude: { type: DataTypes.DOUBLE, defaultValue: null, validate: { min: -180, max: 180 }}, // Location longitude - general meeting area

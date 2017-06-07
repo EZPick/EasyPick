@@ -27,7 +27,7 @@ class Respond extends Component {
     super(props);
     this.state = {data: {}};
     $.ajax({
-          url: '/api/meeting/' + this.props.match.params.id,
+          url: '/api/meeting/' + this.props.match.params.code,
           dataType: 'json',
           cacheL: false,
           success: data => {
@@ -80,7 +80,7 @@ class Respond extends Component {
                 <div className="col-sm-3"></div>
                 <div className="col-sm-6">
                     <form id="response-form" onSubmit={this.submit.bind(this)}>
-                        <input type="hidden" value={this.props.match.params.id} name="meetingId" />
+                        <input type="hidden" value={this.props.match.params.code} name="meetingCode" />
                         <div className="form-group">
                             <label>Name</label>
                             <input name="name" className="form-control" type="text" placeholder="Name" required />

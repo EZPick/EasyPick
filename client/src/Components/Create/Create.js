@@ -28,7 +28,7 @@ function getFormData($form){
 class Create extends Component {
   constructor(props) {
     super(props);
-    this.state = {meetingId: null};
+    this.state = {meetingCode: null};
   }
 
   componentDidMount() {
@@ -148,10 +148,10 @@ class Create extends Component {
             </div>
             <div className="col-sm-3"></div>
           </div>
-          {this.state.meetingId &&
-            <p>Here's a link you can send out: <Link to={'/meeting/' + this.state.meetingId}>{'https://ezpick.herokuapp.com/meeting/' + this.state.meetingId}</Link></p>
+          {this.state.meetingCode &&
+            <p>Here's a link you can send out: <Link to={'/meeting/' + this.state.meetingCode}>{'https://ezpick.herokuapp.com/meeting/' + this.state.meetingCode}</Link></p>
           }
-          {this.state.meetingId && <SendInvites meetingId={this.state.meetingId}/>}
+          {this.state.meetingCode && <SendInvites meetingCode={this.state.meetingCode}/>}
           <div className="row" id="error-row">
             <div className="col-sm-3"></div>
             <div className="col-sm-6">
@@ -187,7 +187,7 @@ class Create extends Component {
       $('#title').hide();
       $('#response-row').hide();
       $('#confirmation-row').fadeIn();
-      this.setState({meetingId: data.data.id});
+      this.setState({meetingCode: data.data.code});
     })
     .fail(function(jqXhr) {
       $('#error-row').fadeIn();
