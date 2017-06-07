@@ -11,8 +11,14 @@ var mockery = require('mockery');
 var sinon = require('sinon');
 
 var responseCreateStub = sinon.stub().returns(Promise.resolve());
+var meetingFindOneStub = sinon.stub().returns(Promise.resolve({
+  id: 1
+}));
 
 mockery.registerMock('../models', {
+  Meeting: {
+    findOne: meetingFindOneStub
+  },
   Response: {
     create: responseCreateStub
   }

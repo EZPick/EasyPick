@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var mockery = require('mockery');
 var sinon = require('sinon');
 var findOneStub = sinon.stub();
+var saveStub = sinon.stub();
 var createStub = sinon.stub();
 var sendMailStub = sinon.stub().returns(Promise.resolve());
 
@@ -51,6 +52,7 @@ describe('meeting controller', function() {
       createStub.resetHistory();
       findOneStub.resetHistory();
       sendMailStub.resetHistory();
+      saveStub.resetHistory();
 
       app = express();
       app.use(bodyParser.json());
@@ -60,15 +62,17 @@ describe('meeting controller', function() {
 
     describe('/meeting/create', function() {
       it('should 200 when create succeeds', function(done) {
-        createStub.returns(
-          Promise.resolve({
-            dataValues: {
-              id: 1,
-              title: 'Title'
-            }
-          })
-        );
+        var meeting = {
+          id: 1,
+          title: 'Title',
+          save: saveStub,
+          dataValues: {}
+        };
+
+        createStub.returns(Promise.resolve(meeting));
+        saveStub.returns(Promise.resolve(meeting));
         sendMailStub.returns(Promise.resolve(null));
+
         chai.request(app)
           .post('/meeting/create')
           .send({
@@ -90,6 +94,7 @@ describe('meeting controller', function() {
             expect(res).to.have.status(200);
             expect(createStub.calledOnce).to.equal(true);
             expect(sendMailStub.calledOnce).to.equal(true);
+            expect(saveStub.calledOnce).to.equal(true);
             done();
           });
       });
@@ -125,18 +130,19 @@ describe('meeting controller', function() {
       });
     });
 
-    describe('/meeting/:id', function() {
+    describe('/meeting/:code', function() {
       it('should 200 when meeting exists', function(done) {
         findOneStub.returns(
           Promise.resolve({
             dataValues: {
               id: 1,
+              code: 'asdf1',
               title: 'Title'
             }
           })
         );
         chai.request(app)
-          .get('/meeting/1')
+          .get('/meeting/asdf1')
           .end(function(err, res) {
             expect(err).to.not.exist;
             expect(res).to.have.status(200);
@@ -148,7 +154,7 @@ describe('meeting controller', function() {
       it('should 404 when meeting doesn\'t exist', function(done) {
         findOneStub.returns(Promise.reject());
         chai.request(app)
-          .get('/meeting/1')
+          .get('/meeting/asdf1')
           .end(function(err, res) {
             expect(err).to.exist;
             expect(res).to.have.status(404);

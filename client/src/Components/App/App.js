@@ -26,8 +26,8 @@ class App extends Component {
           <div>
             <Route exact path="/" component={Home}/>
             <Route exact path="/create" component={Create}/>
-            <Route path="/respond/:id" component={Respond}/>
-            <Route path="/meeting/:id" component={Meeting}/>
+            <Route path="/respond/:code" component={Respond}/>
+            <Route path="/meeting/:code" component={Meeting}/>
           </div>
         </Router>
         <footer className="footer">
