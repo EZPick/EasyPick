@@ -65,6 +65,7 @@ describe('meeting controller', function() {
         var meeting = {
           id: 1,
           title: 'Title',
+          code: 'asdf1',
           save: saveStub,
           dataValues: {}
         };
