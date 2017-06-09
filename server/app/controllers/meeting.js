@@ -118,8 +118,8 @@ router.post('/create', function(req, res, next) {
           to: req.body.email
         },
         {
-          meetingTitle: meeting.dataValues.title,
-          meetingLink: 'http://ezpick.herokuapp.com/meeting/' + meeting.dataValues.id
+          meetingTitle: meeting.title,
+          meetingLink: 'http://ezpick.herokuapp.com/meeting/' + meeting.code
         }
       );
 
