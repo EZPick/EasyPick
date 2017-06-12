@@ -19,7 +19,7 @@ class SendInvites extends Component {
       <div>
         <p>Or we can invite people by email. Just enter their emails below.</p>
         <form id="invite-form" onSubmit={this.submit.bind(this)}>
-          <input type="hidden" name="id" value={this.props.meetingCode} />
+          <input type="hidden" name="code" value={this.props.meetingCode} />
           <div className="form-group">
             <label>Emails</label>
             <input name="emails" className="form-control" type="text" placeholder="Type the emails you want to invite (comma separated)" required />
